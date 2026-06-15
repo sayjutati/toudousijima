@@ -1,0 +1,17 @@
+{
+  "name": "toudou-sijima-hp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/ensure-required-files.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/ensure-required-files.mjs",
+    "build": "vite build",
+    "prepreview": "node scripts/ensure-required-files.mjs",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
