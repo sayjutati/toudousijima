@@ -5,8 +5,13 @@ const navItems = [
   { id: 'start', label: 'START' },
   { id: 'info', label: 'INFO' },
   { id: 'profile', label: 'PROFILE' },
+  { id: 'tags', label: 'TAGS' },
   { id: 'stream', label: 'STREAM' },
 ]
+
+function xHashtagSearchUrl(hashtag) {
+  return `https://x.com/search?q=${encodeURIComponent(hashtag)}&src=typed_query&f=live`
+}
 
 function socialIconLinks() {
   return site.social
@@ -111,6 +116,62 @@ function profileCards() {
             </dl>
           </div>
           ${person.bio ? `<p class="profile-card__bio">${person.bio}</p>` : ''}
+        </article>
+      `,
+    )
+    .join('')
+}
+
+function tagCardActions(tag) {
+  const xLink = `
+    <a
+      class="tag-card__action"
+      href="${xHashtagSearchUrl(tag.hashtag)}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      X（Twitter）で検索 ↗
+    </a>
+  `
+
+  if (!tag.hasMarshmallow) {
+    return `<div class="tag-card__actions">${xLink}</div>`
+  }
+
+  return `
+    <div class="tag-card__actions">
+      ${xLink}
+      <a
+        class="tag-card__action tag-card__action--marshmallow"
+        href="${site.marshmallow.href}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        マシュマロ ↗
+      </a>
+    </div>
+  `
+}
+
+function tagCards() {
+  return site.tags
+    .map(
+      (tag, index) => `
+        <article
+          class="tag-card${tag.variant ? ` tag-card--${tag.variant}` : ''}"
+          style="--tag-float-delay: ${index * 0.7}s"
+        >
+          <p class="tag-card__category">${tag.category}</p>
+          <a
+            class="tag-card__hashtag"
+            href="${xHashtagSearchUrl(tag.hashtag)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >${tag.hashtag}</a>
+          <ul class="tag-card__uses">
+            ${tag.uses.map((use) => `<li>${use}</li>`).join('')}
+          </ul>
+          ${tagCardActions(tag)}
         </article>
       `,
     )
@@ -266,9 +327,22 @@ document.querySelector('#app').innerHTML = `
         </div>
       </section>
 
-      <section id="stream" class="section stream-section">
+      <section id="tags" class="section tags-section">
         <div class="section-head">
           <p class="section-number">03</p>
+          <div>
+            <p class="section-label">TAGS</p>
+            <h2>公式タグ</h2>
+          </div>
+        </div>
+        <div class="tags-grid">
+          ${tagCards()}
+        </div>
+      </section>
+
+      <section id="stream" class="section stream-section">
+        <div class="section-head">
+          <p class="section-number">04</p>
           <div>
             <p class="section-label">STREAM</p>
             <h2>配信について</h2>
@@ -359,7 +433,9 @@ if (sections.length > 0 && navLinkElements.length > 0) {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
         navLinkElements.forEach((link) => {
-          link.classList.toggle('is-active', link.dataset.nav === entry.target.id)
+          const isActive = link.dataset.nav === entry.target.id
+          link.classList.toggle('is-active', isActive)
+          link.setAttribute('aria-current', isActive ? 'true' : 'false')
         })
       })
     },
@@ -368,6 +444,7 @@ if (sections.length > 0 && navLinkElements.length > 0) {
 
   sections.forEach((section) => observer.observe(section))
   navLinkElements[0]?.classList.add('is-active')
+  navLinkElements[0]?.setAttribute('aria-current', 'true')
 }
 
 const infoSlider = document.querySelector('[data-info-slider]')
@@ -389,6 +466,13 @@ if (infoSlider) {
   })
 
   if (slides.length > 1) {
-    setInterval(() => showSlide(current + 1), 5000)
+    let timer = setInterval(() => showSlide(current + 1), 5000)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearInterval(timer)
+      } else {
+        timer = setInterval(() => showSlide(current + 1), 5000)
+      }
+    })
   }
 }

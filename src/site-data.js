@@ -74,6 +74,44 @@ export const site = {
       iconLabel: 'Spoon',
     },
   ],
+  tags: [
+    {
+      category: '配信タグ',
+      hashtag: '#しじらじ',
+      uses: ['配信感想', '配信実況', '番組関連全般'],
+    },
+    {
+      category: 'ファンアートタグ',
+      hashtag: '#しじあーと',
+      uses: [
+        '橙々しじまのファンアート',
+        'あぶくを含むイラスト',
+        '配信やラジオに関連する創作作品',
+      ],
+      variant: 'fanart',
+    },
+    {
+      category: 'お便り・質問募集タグ',
+      hashtag: '#しじま便',
+      uses: ['橙々しじま宛のお便り', '質問', '相談', '配信で読んでほしい内容'],
+      hasMarshmallow: true,
+    },
+    {
+      category: 'お便り・質問募集タグ',
+      hashtag: '#あぶく便',
+      uses: [
+        'あぶく宛のお便り',
+        'あぶくへの質問',
+        'あぶくに聞いてみたいこと',
+        'あぶく目線で答えてほしい内容',
+      ],
+      variant: 'partner',
+      hasMarshmallow: true,
+    },
+  ],
+  marshmallow: {
+    href: 'https://t.co/hOrVIRN6vZ',
+  },
   social: [
     {
       id: 'twitter',
