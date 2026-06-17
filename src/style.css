@@ -1960,6 +1960,10 @@ body.nav-open {
   font-size: inherit;
 }
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   モバイル共通：ナビ切り替え + 基本1カラム化
+   ≤ 900px
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 @media (max-width: 900px) {
   .site-nav {
     display: none;
@@ -1979,8 +1983,15 @@ body.nav-open {
     grid-template-columns: 1fr;
   }
 
+  .hero {
+    min-height: auto;
+  }
+
+  .hero__visual {
+    order: -1;
+  }
+
   .info-visual {
-    max-width: 18.5rem;
     margin: 0 auto;
     width: 100%;
     min-height: auto;
@@ -1998,14 +2009,6 @@ body.nav-open {
 
   .info-panel::before {
     font-size: 3.5rem;
-  }
-
-  .hero {
-    min-height: auto;
-  }
-
-  .hero__visual {
-    order: -1;
   }
 
   .section {
@@ -2060,26 +2063,360 @@ body.nav-open {
   }
 }
 
-@media (max-width: 600px) {
-  .profile-row {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   B1 タブレット（iPad など）
+   768px 〜 900px
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (min-width: 768px) and (max-width: 900px) {
+  /* タブレットは余裕があるのでグリッドを2カラム維持 */
+  .profile-duo,
+  .tags-grid,
+  .stream-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
+  /* 立ち絵：幅を広げる */
+  .info-visual {
+    max-width: min(100%, 28rem);
+  }
+
+  /* タグカード：フォントをタブレット向けに調整 */
+  .tag-card__hashtag {
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+  }
+
+  /* セクション間隔 */
+  .section {
+    padding: 4rem 0;
+  }
+
+  /* フッターソーシャル：タブレットは2カラムを維持 */
+  .footer-social__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   B2 スマートフォン（通常）
+   〜 767px
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 767px) {
+  /* ─ 全体 */
+  .section {
+    padding: 2.75rem 0;
+  }
+
+  .section-head {
+    gap: 0.9rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .section-number {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+  }
+
+  /* ─ ヒーロー */
+  .hero {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    gap: 1.5rem;
+  }
+
+  .hero__title-frame {
+    padding: 1rem 1.2rem 1.1rem;
+  }
+
+  .hero__title-ornament {
+    width: min(100%, 20rem);
+  }
+
+  .hero__social-list {
+    margin-top: 1rem;
+  }
+
+  /* ─ INFO */
+  .info-visual {
+    max-width: 100%;
+  }
+
+  .info-visual__frame {
+    min-height: 19rem;
+  }
+
+  .info-panel {
+    padding: 1.5rem 1.35rem;
+  }
+
+  .info-panel__lead {
+    font-size: 0.96rem;
+    line-height: 1.9;
+  }
+
+  .info-panel__note {
+    font-size: 0.89rem;
+  }
+
+  /* ─ プロフィール */
+  .profile-card {
+    padding: 1.25rem 1.1rem;
+  }
+
+  .profile-card__head {
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .profile-card__avatar {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .profile-card__name {
+    font-size: 1.2rem;
+  }
+
+  .profile-card__body {
+    padding: 0.85rem 0.9rem;
+  }
+
+  .profile-row {
+    padding: 0.65rem 0;
+    gap: 0.65rem;
+  }
+
+  /* ─ タグ */
+  .tags-grid {
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  .tag-card {
+    padding: 1.5rem 1.1rem 1.25rem;
+  }
+
+  .tag-card__hashtag {
+    font-size: clamp(1.45rem, 5.5vw, 1.85rem);
+    margin-bottom: 1rem;
+  }
+
+  .tag-card__uses {
+    margin-bottom: 1.1rem;
+  }
+
+  .tag-card__uses li {
+    font-size: 0.8rem;
+  }
+
+  /* ─ 配信 */
+  .stream-card {
+    padding: 1.75rem 1.35rem;
+  }
+
+  /* ─ フッター */
+  .footer-social__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .footer-brand__name {
+    font-size: 1.35rem;
+  }
+
+  .footer-brand__name-en {
+    font-size: 0.9rem;
+  }
+
+  .footer-brand__role {
+    font-size: 1rem;
+  }
+
+  .footer-heading {
+    font-size: 0.9rem;
+  }
+
+  .footer-copy {
+    font-size: 0.88rem;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   B3 小型スマートフォン（iPhone SE 等）
+   〜 480px
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 480px) {
+  /* ─ 全体 */
+  .section {
+    width: calc(100% - 1.5rem);
+    padding: 2.25rem 0;
+  }
+
+  .section-head {
+    gap: 0.6rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .section-number {
+    font-size: clamp(1.75rem, 9vw, 2.2rem);
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.15rem, 5vw, 1.45rem);
+  }
+
+  /* ─ ヒーロー */
+  .hero {
+    gap: 1.25rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.75rem;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    margin-bottom: 0.65rem;
+    letter-spacing: 0.18em;
+  }
+
+  .hero__title-frame {
+    padding: 0.9rem 1rem 1rem;
+  }
+
+  /* ─ INFO */
+  .info-visual__frame {
+    min-height: 15rem;
+  }
+
+  .info-panel {
+    padding: 1.1rem 1rem;
+  }
+
+  .info-panel__lead {
+    font-size: 0.9rem;
+    line-height: 1.85;
+  }
+
+  .info-panel__note {
+    font-size: 0.84rem;
+    padding-left: 0.7rem;
+  }
+
+  .info-panel__rule {
+    margin: 1rem 0;
+  }
+
+  /* ─ プロフィール */
+  .profile-card {
+    padding: 1rem 0.9rem;
+  }
+
+  .profile-card__head {
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .profile-card__avatar {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
+  .profile-card__name {
+    font-size: 1.05rem;
+  }
+
+  .profile-card__name-en {
+    font-size: 0.65rem;
+  }
+
+  .profile-card__body {
+    padding: 0.7rem 0.7rem;
+  }
+
+  .profile-row {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+    padding: 0.5rem 0;
+  }
+
+  .profile-row dt {
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+  }
+
+  .profile-row dd {
+    font-size: 0.98rem;
+  }
+
+  /* ─ タグ */
+  .tags-grid {
+    gap: 0.9rem;
+  }
+
+  .tag-card {
+    padding: 1.25rem 0.9rem 1.1rem;
+  }
+
+  .tag-card__hashtag {
+    font-size: clamp(1.25rem, 7vw, 1.55rem);
+    margin-bottom: 0.85rem;
+  }
+
+  .tag-card__category {
+    font-size: 0.62rem;
+    padding: 0.26rem 0.7rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .tag-card__uses {
+    margin-bottom: 0.95rem;
+    gap: 0.3rem;
+  }
+
+  .tag-card__uses li {
+    font-size: 0.76rem;
+  }
+
+  .tag-card__action {
+    font-size: 0.66rem;
+    padding: 0.3rem 0.58rem;
+  }
+
+  /* ─ 配信 */
+  .stream-card {
+    padding: 1.35rem 1rem;
+  }
+
+  /* ─ フッター */
   .footer-social__list {
     grid-template-columns: 1fr;
+    gap: 0.65rem;
   }
 
   .hero .footer-social__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .footer-brand__name {
+    font-size: 1.15rem;
+  }
+
+  .footer-heading {
+    font-size: 0.82rem;
+  }
+
   .footer-nav ul {
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.5rem;
   }
 
   .footer-nav li + li::before {
     display: none;
+  }
+
+  .footer-copy {
+    font-size: 0.78rem;
   }
 }
