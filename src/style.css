@@ -1521,6 +1521,36 @@ body.nav-open {
   }
 }
 
+/* ─── スクロールリビール ─────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal='left'] {
+  transform: translate(-32px, 12px);
+}
+
+[data-reveal='right'] {
+  transform: translate(32px, 12px);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .site-footer {
   position: relative;
   margin-top: 2rem;

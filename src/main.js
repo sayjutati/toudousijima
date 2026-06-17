@@ -92,7 +92,7 @@ function profileCards() {
   return site.profiles
     .map(
       (person, index) => `
-        <article class="profile-card${index === 1 ? ' profile-card--partner' : ''}">
+        <article class="profile-card${index === 1 ? ' profile-card--partner' : ''}" data-reveal="${index === 0 ? 'left' : 'right'}" style="transition-delay: ${index * 0.1}s">
           <header class="profile-card__head">
             <div class="profile-card__avatar-wrap">
               <img
@@ -159,7 +159,8 @@ function tagCards() {
       (tag, index) => `
         <article
           class="tag-card${tag.variant ? ` tag-card--${tag.variant}` : ''}"
-          style="--tag-float-delay: ${index * 0.7}s"
+          data-reveal
+          style="--tag-float-delay: ${index * 0.7}s; transition-delay: ${index * 0.1}s"
         >
           <p class="tag-card__category">${tag.category}</p>
           <a
@@ -181,8 +182,8 @@ function tagCards() {
 function streamCards() {
   return site.streams
     .map(
-      (stream) => `
-        <article class="stream-card">
+      (stream, index) => `
+        <article class="stream-card" data-reveal style="transition-delay: ${index * 0.12}s">
           <p class="stream-card__eyebrow">${stream.title}</p>
           <h3 class="stream-card__title">${stream.subtitle}</h3>
           <div class="stream-card__rule" aria-hidden="true"></div>
@@ -286,7 +287,7 @@ document.querySelector('#app').innerHTML = `
 
       <section id="info" class="section info-section">
         <div class="info-layout">
-          <div class="info-visual" data-info-slider>
+          <div class="info-visual" data-info-slider data-reveal="left">
             <div class="info-visual__frame">
               ${infoStandeeSlides()}
             </div>
@@ -297,7 +298,7 @@ document.querySelector('#app').innerHTML = `
             </div>
           </div>
 
-          <article class="info-panel">
+          <article class="info-panel" data-reveal="right" style="transition-delay: 0.1s">
             <header class="info-panel__head">
               <p class="info-panel__number" aria-hidden="true">01</p>
               <div>
@@ -315,7 +316,7 @@ document.querySelector('#app').innerHTML = `
       </section>
 
       <section id="profile" class="section profile-section">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="section-number">02</p>
           <div>
             <p class="section-label">PROFILE</p>
@@ -328,7 +329,7 @@ document.querySelector('#app').innerHTML = `
       </section>
 
       <section id="tags" class="section tags-section">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="section-number">03</p>
           <div>
             <p class="section-label">TAGS</p>
@@ -341,7 +342,7 @@ document.querySelector('#app').innerHTML = `
       </section>
 
       <section id="stream" class="section stream-section">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="section-number">04</p>
           <div>
             <p class="section-label">STREAM</p>
@@ -351,7 +352,7 @@ document.querySelector('#app').innerHTML = `
         <div class="stream-grid">
           ${streamCards()}
         </div>
-        <div class="stream-account-links">
+        <div class="stream-account-links" data-reveal>
           ${socialIconLinks()}
         </div>
       </section>
@@ -359,7 +360,7 @@ document.querySelector('#app').innerHTML = `
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <div class="footer-top-row">
+        <div class="footer-top-row" data-reveal>
           <div class="footer-brand">
             <a class="footer-brand__link" href="#start">
               <span class="footer-brand__avatar-wrap">
@@ -381,7 +382,7 @@ document.querySelector('#app').innerHTML = `
           </nav>
         </div>
 
-        <div class="footer-social">
+        <div class="footer-social" data-reveal style="transition-delay: 0.1s">
           <p class="footer-heading">FOLLOW</p>
           <ul class="footer-social__list">${footerSocialLinks()}</ul>
         </div>
@@ -475,4 +476,20 @@ if (infoSlider) {
       }
     })
   }
+}
+
+// ─── スクロールリビール ────────────────────────────
+const revealElements = document.querySelectorAll('[data-reveal]')
+if (revealElements.length > 0) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        revealObserver.unobserve(entry.target)
+      })
+    },
+    { rootMargin: '0px 0px -6% 0px', threshold: 0.08 },
+  )
+  revealElements.forEach((el) => revealObserver.observe(el))
 }
