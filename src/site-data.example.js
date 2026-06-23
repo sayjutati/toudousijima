@@ -7,6 +7,10 @@ export const site = {
   name: '橙々しじま',
   nameEn: 'TOUDOU SIJIMA',
   role: '雑談、ひとりごと、ときどき脱線',
+  description:
+    '橙々しじま（とうどうしじま）公式サイト。雑談、ひとりごと、ときどき脱線。配信告知・SNSリンクはこちら。',
+  siteUrl: 'https://www.toudousijima.com',
+  ogImage: '/images/hero-radio.png',
   infoTitle: 'お会いできて光栄です',
   intro:
     'みなさま初めまして、橙々しじまと申します。マイクの向こうから、雑談や音楽、ときには深い話やそうでもない話まで——ゆったりとした時間をお届けいたします。落ち着いた空間で、どこかにそっと寄り添えたら幸いです。',
