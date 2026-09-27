@@ -13,13 +13,12 @@ function resolveSiteUrl(site) {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`
   }
-  return 'http://localhost:5173'
+  return 'http://localhost:4040'
 }
 
 function ogpMetaTags(site, siteUrl) {
   const title = `${site.name} | Official`
   const description = site.description
-  const ogImage = `${siteUrl}${site.ogImage}`
   const twitter = site.social?.find((item) => item.id === 'twitter')
 
   const tags = [
@@ -28,14 +27,22 @@ function ogpMetaTags(site, siteUrl) {
     `<meta property="og:description" content="${escapeAttr(description)}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:url" content="${escapeAttr(`${siteUrl}/`)}" />`,
-    `<meta property="og:image" content="${escapeAttr(ogImage)}" />`,
     `<meta property="og:locale" content="ja_JP" />`,
     `<meta property="og:site_name" content="${escapeAttr(site.name)}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${escapeAttr(title)}" />`,
     `<meta name="twitter:description" content="${escapeAttr(description)}" />`,
-    `<meta name="twitter:image" content="${escapeAttr(ogImage)}" />`,
   ]
+
+  if (site.ogImage) {
+    const ogImage = `${siteUrl}${site.ogImage}`
+    tags.splice(
+      5,
+      0,
+      `<meta property="og:image" content="${escapeAttr(ogImage)}" />`,
+    )
+    tags.push(`<meta name="twitter:image" content="${escapeAttr(ogImage)}" />`)
+  }
 
   if (twitter?.handle) {
     tags.push(
@@ -68,5 +75,13 @@ export default defineConfig(async () => {
   return {
     base: './',
     plugins: [ogpPlugin(site)],
+    server: {
+      port: 4040,
+      strictPort: true,
+    },
+    preview: {
+      port: 4040,
+      strictPort: true,
+    },
   }
 })

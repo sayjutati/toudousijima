@@ -10,20 +10,60 @@ export const site = {
   description:
     '橙々しじま（とうどうしじま）公式サイト。雑談、ひとりごと、ときどき脱線。配信告知・SNSリンクはこちら。',
   siteUrl: 'https://www.toudousijima.com',
-  ogImage: '/images/hero-radio.png',
-  infoTitle: 'お会いできて光栄です',
-  intro:
-    'みなさま初めまして、橙々しじまと申します。マイクの向こうから、雑談や音楽、ときには深い話やそうでもない話まで——ゆったりとした時間をお届けいたします。落ち着いた空間で、どこかにそっと寄り添えたら幸いです。',
-  about:
-    '配信ではコメントとの対話を楽しみながら、リスナーの皆さんと素敵な時間を過ごせたらと思います。',
-  infoStandees: [
+  ogImage: '/images/logo.png',
+  heroSlides: [
+    { src: '/images/hero-stand.png', alt: '橙々しじま' },
+    { src: '/images/hero-back.png', alt: '橙々しじま 後ろ姿' },
+    { src: '/images/hero-sit.png', alt: '橙々しじま 座り' },
+  ],
+  logo: '/images/logo.png',
+  backgrounds: {
+    top: '/images/bg-night.jpg',
+    bottom: '/images/bg-day.jpg',
+  },
+  abukuHero: {
+    name: 'あぶく',
+    nameEn: 'ABUKU',
+    role: '相棒の三又猫',
+    slides: [
+      { src: '/images/abuku-1.png', alt: 'あぶく' },
+      { src: '/images/abuku-2.png', alt: 'あぶく 歩き' },
+      { src: '/images/abuku-3.png', alt: 'あぶく 後ろ姿' },
+    ],
+  },
+  infoTitle: '自己紹介',
+  nameReading: 'とうとう しじま',
+  about: {
+    image: '/images/hero-sit.png',
+    imageAlt: '橙々しじま 座り',
+    quote: 'みんなで探してみて',
+    paragraphs: [
+      '橙々しじまと申します。ユーモアのあるおじさん。何かの専門家ではなく、いろんな話をしている人です。',
+      '活動の軸は「橙々しじま」。音楽と動画はこの名前で、小説だけはペンネーム「三二 一（みつに はじめ）」で発表しています。しじま＝三二 一であることは公開しています。',
+      '発表の場はそれぞれ分けていますが、作っている人は同じです。',
+    ],
+    worksLabel: 'やっていること',
+  },
+  // link.href が空のものは「準備中」として表示される
+  activities: [
     {
-      src: '/images/stand-holding-cat.png',
-      alt: '猫を抱える橙々しじま',
+      title: '音楽',
+      alias: '橙々しじま',
+      summary: 'アカペラ。思いついたメロディーと歌詞を、そのまま流す。作り込んだ完成品ではなく、ふと浮かんだものを残していく。',
+      link: { label: 'TikTok', href: 'https://www.tiktok.com/@toudousijima' },
     },
     {
-      src: '/images/stand-mansion.png',
-      alt: '橙々しじま 立ち絵',
+      title: '動画',
+      alias: '橙々しじま',
+      summary: 'ラジオ・雑談系の動画を投稿。ライブ配信は行わない。',
+      link: { label: '投稿先', href: '' },
+    },
+    {
+      title: '小説',
+      alias: '三二 一',
+      aliasReading: 'みつに はじめ',
+      summary: '小説は小説として、独立した活動。',
+      link: { label: '掲載先', href: '' },
     },
   ],
   profiles: [
@@ -31,29 +71,49 @@ export const site = {
       label: 'HOST',
       name: '橙々しじま',
       nameEn: 'TOUDOU SIJIMA',
-      image: '/images/icon.png',
+      image: '',
       imageAlt: '橙々しじま',
+      tagline: 'ユーモアのあるおじさん。何かの専門家ではなく、いろんな話をしている人。',
       fields: [
         { label: '誕生日', value: '10月10日' },
         { label: '身長', value: '179cm' },
-        { label: '飲み物', value: '水' },
-        { label: '口癖', value: 'みんなで探してみて' },
-        { label: '弱点', value: '集合した虫' },
-        { label: '趣味', value: 'マスクの中で変顔' },
+        { label: '口癖', value: '「みんなで探してみて」' },
+      ],
+      notes: [
+        {
+          label: '性格',
+          text: '落ち着いていて穏やか。日常のどうでもいいことを面白がる。人や物事を少し離れたところから眺め、自分自身も笑いの対象にする。無理に笑わせようとはしない。',
+        },
+        {
+          label: '話し方',
+          text: '漫談のように、日常の小さな出来事から話を広げていく。よく脱線する。',
+        },
       ],
     },
     {
       label: 'PARTNER',
       name: 'あぶく',
       nameEn: 'ABUKU',
-      image: '/images/cat-front.png',
+      image: '',
       imageAlt: 'あぶく',
+      tagline: '何者なのかよく分からないけど、いつもしじまの横にいる。',
       fields: [
-        { label: '種族', value: '三又猫' },
-        { label: '年齢', value: '不明' },
-        { label: '身長', value: '50〜70cm（可変式）' },
+        { label: '種族', value: '三又の白猫' },
+        { label: '年齢', value: '7歳' },
+        { label: '大きさ', value: '50〜70cmくらい（微妙に変わる）' },
         { label: '体重', value: '3.3kg' },
-        { label: '好きな食べ物', value: 'ささみ' },
+        { label: '首輪', value: '赤い首輪の飾り' },
+        { label: '好物', value: 'ささみ' },
+      ],
+      notes: [
+        {
+          label: 'ふだん',
+          text: '基本的に自由。寝ている、食べている、暴れている。',
+        },
+        {
+          label: 'キャラクター',
+          text: '設定で縛りすぎず、余白を残すキャラクター。',
+        },
       ],
     },
   ],
@@ -144,6 +204,13 @@ export const site = {
       handle: '橙々しじま',
       href: 'https://u8kv3.app.goo.gl/4Z6TJ',
       icon: '/icons/spoon.png',
+    },
+    {
+      id: 'tiktok',
+      label: 'TikTok',
+      handle: '@toudousijima',
+      href: 'https://www.tiktok.com/@toudousijima',
+      icon: '/icons/tiktok.svg',
     },
   ],
 }

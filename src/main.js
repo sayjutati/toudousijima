@@ -2,62 +2,16 @@ import './style.css'
 import { site } from './site-data.js'
 
 const navItems = [
-  { id: 'start', label: 'START' },
-  { id: 'info', label: 'INFO' },
-  { id: 'profile', label: 'PROFILE' },
-  { id: 'tags', label: 'TAGS' },
-  { id: 'stream', label: 'STREAM' },
+  { id: 'start', label: 'TOP', jp: 'トップ' },
+  { id: 'abuku', label: 'ABUKU', jp: 'あぶく' },
+  { id: 'about', label: 'ABOUT', jp: '自己紹介' },
+  { id: 'profile', label: 'PROFILE', jp: 'プロフィール' },
+  { id: 'tags', label: 'TAGS', jp: '公式タグ' },
+  { id: 'link', label: 'LINK', jp: 'リンク' },
 ]
 
 function xHashtagSearchUrl(hashtag) {
   return `https://x.com/search?q=${encodeURIComponent(hashtag)}&src=typed_query&f=live`
-}
-
-function socialIconLinks() {
-  return site.social
-    .map(
-      (item) => `
-        <a
-          class="social-btn social-btn--icon"
-          href="${item.href}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="${item.label}"
-        >
-          <img src="${item.icon}" alt="" width="48" height="48" loading="lazy" />
-        </a>
-      `,
-    )
-    .join('')
-}
-
-function footerSocialLinks() {
-  return site.social
-    .map(
-      (item) => `
-        <li>
-          <a
-            class="footer-social__link"
-            href="${item.href}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img class="footer-social__icon" src="${item.icon}" alt="" width="60" height="60" loading="lazy" />
-            <span class="footer-social__text">
-              <span class="footer-social__label">${item.label}</span>
-              <span class="footer-social__handle">${item.handle}</span>
-            </span>
-          </a>
-        </li>
-      `,
-    )
-    .join('')
-}
-
-function footerNavLinks() {
-  return navItems
-    .map((item) => `<li><a href="#${item.id}">${item.label}</a></li>`)
-    .join('')
 }
 
 function navLinks(linkClass) {
@@ -69,17 +23,39 @@ function navLinks(linkClass) {
     .join('')
 }
 
-function heroDisplayName(name) {
-  if (!name.startsWith('橙')) return name
+function drawerLinks() {
+  return navItems
+    .map(
+      (item) => `
+        <li>
+          <a class="drawer__a" href="#${item.id}" data-nav="${item.id}">
+            <span>${item.label}</span>
+            <small>${item.jp}</small>
+          </a>
+        </li>
+      `,
+    )
+    .join('')
+}
 
-  return `<span class="hero__name-accent">橙</span>${name.slice(1)}`
+function socialPills() {
+  return site.social
+    .map(
+      (item) => `
+        <a class="pill" href="${item.href}" target="_blank" rel="noopener noreferrer">
+          <img src="${item.icon}" alt="" width="28" height="28" />
+          <span>${item.label}</span>
+        </a>
+      `,
+    )
+    .join('')
 }
 
 function profileFieldRows(fields) {
   return fields
     .map(
       ({ label, value }) => `
-        <div class="profile-row">
+        <div class="spec">
           <dt>${label}</dt>
           <dd>${value}</dd>
         </div>
@@ -92,404 +68,420 @@ function profileCards() {
   return site.profiles
     .map(
       (person, index) => `
-        <article class="profile-card${index === 1 ? ' profile-card--partner' : ''}" data-reveal="${index === 0 ? 'left' : 'right'}" style="transition-delay: ${index * 0.1}s">
-          <header class="profile-card__head">
-            <div class="profile-card__avatar-wrap">
-              <img
-                class="profile-card__avatar"
-                src="${person.image}"
-                alt="${person.imageAlt}"
-                width="72"
-                height="72"
-                loading="lazy"
-              />
-            </div>
-            <div class="profile-card__identity">
-              <p class="profile-card__label">${person.label}</p>
-              <h3 class="profile-card__name">${person.name}</h3>
-              <p class="profile-card__name-en">${person.nameEn}</p>
-            </div>
-          </header>
-          <div class="profile-card__body">
-            <dl class="profile-card__fields">
-              ${profileFieldRows(person.fields)}
-            </dl>
-          </div>
-          ${person.bio ? `<p class="profile-card__bio">${person.bio}</p>` : ''}
+        <article class="who panel" data-reveal style="transition-delay: ${index * 0.08}s">
+          ${person.image ? `<img class="who__photo" src="${person.image}" alt="${person.imageAlt}" width="220" height="220" />` : ''}
+          <p class="who__role">${person.label}</p>
+          <h3 class="who__name">${person.name}</h3>
+          <p class="who__en">${person.nameEn}</p>
+          ${person.tagline ? `<p class="who__tag">${person.tagline}</p>` : ''}
+          <dl class="who__spec">${profileFieldRows(person.fields)}</dl>
         </article>
       `,
     )
     .join('')
 }
 
-function tagCardActions(tag) {
-  const xLink = `
-    <a
-      class="tag-card__action"
-      href="${xHashtagSearchUrl(tag.hashtag)}"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      X（Twitter）で検索 ↗
-    </a>
-  `
-
-  if (!tag.hasMarshmallow) {
-    return `<div class="tag-card__actions">${xLink}</div>`
-  }
-
-  return `
-    <div class="tag-card__actions">
-      ${xLink}
-      <a
-        class="tag-card__action tag-card__action--marshmallow"
-        href="${site.marshmallow.href}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        マシュマロ ↗
-      </a>
-    </div>
-  `
+function novelCards() {
+  return site.novels.items
+    .map((novel, index) => {
+      const delay = `style="transition-delay: ${index * 0.06}s"`
+      if (!novel.href) {
+        return `
+          <article class="novel novel--soon panel" data-reveal ${delay}>
+            <div class="novel__cover novel__cover--empty" aria-hidden="true"></div>
+            <div class="novel__body">
+              <p class="novel__plat">Nola</p>
+              <p class="novel__title">${novel.title}</p>
+            </div>
+          </article>
+        `
+      }
+      return `
+        <a class="novel panel" href="${novel.href}" target="_blank" rel="noopener noreferrer" data-reveal ${delay}>
+          ${novel.cover ? `<img class="novel__cover" src="${novel.cover}" alt="${novel.title} の表紙" loading="lazy" />` : ''}
+          <div class="novel__body">
+            <p class="novel__plat">${novel.platform}</p>
+            <p class="novel__title">${novel.title}</p>
+            ${novel.author ? `<p class="novel__by">${novel.author}</p>` : ''}
+            ${novel.summary ? `<p class="novel__sum">${novel.summary}</p>` : ''}
+            <span class="novel__go">読む<i aria-hidden="true">↗</i></span>
+          </div>
+        </a>
+      `
+    })
+    .join('')
 }
 
 function tagCards() {
   return site.tags
     .map(
       (tag, index) => `
-        <article
-          class="tag-card${tag.variant ? ` tag-card--${tag.variant}` : ''}"
-          data-reveal
-          style="--tag-float-delay: ${index * 0.7}s; transition-delay: ${index * 0.1}s"
-        >
-          <p class="tag-card__category">${tag.category}</p>
-          <a
-            class="tag-card__hashtag"
-            href="${xHashtagSearchUrl(tag.hashtag)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >${tag.hashtag}</a>
-          <ul class="tag-card__uses">
-            ${tag.uses.map((use) => `<li>${use}</li>`).join('')}
-          </ul>
-          ${tagCardActions(tag)}
-        </article>
+        <a class="hash" href="${xHashtagSearchUrl(tag.hashtag)}" target="_blank" rel="noopener noreferrer" data-reveal style="transition-delay: ${index * 0.06}s">
+          <span class="hash__rule" aria-hidden="true"><i></i><b></b><i></i></span>
+          <span class="hash__tag">${tag.hashtag}</span>
+          <span class="hash__rule hash__rule--flip" aria-hidden="true"><i></i><b></b><i></i></span>
+          <span class="hash__go">Xで検索</span>
+        </a>
       `,
     )
     .join('')
 }
 
-function streamCards() {
-  return site.streams
-    .map(
-      (stream, index) => `
-        <article class="stream-card" data-reveal style="transition-delay: ${index * 0.12}s">
-          <p class="stream-card__eyebrow">${stream.title}</p>
-          <h3 class="stream-card__title">${stream.subtitle}</h3>
-          <div class="stream-card__rule" aria-hidden="true"></div>
-          <p class="stream-card__desc">${stream.description}</p>
-        </article>
-      `,
-    )
-    .join('')
+function abukuPills() {
+  const tag = site.tags.find((item) => item.hashtag === '#あぶく銭')
+  if (!tag) return ''
+  return `
+    <a class="pill" href="${xHashtagSearchUrl(tag.hashtag)}" target="_blank" rel="noopener noreferrer">
+      <span class="pill__mark" aria-hidden="true">#</span>
+      <span>あぶく銭</span>
+    </a>
+  `
 }
 
-function infoStandeeSlides() {
-  return site.infoStandees
-    .map(
-      (image, index) => `
-        <figure class="info-slide${index === 0 ? ' is-active' : ''}" data-index="${index}">
-          <img src="${image.src}" alt="${image.alt}" loading="${index === 0 ? 'eager' : 'lazy'}" />
+function heroSlides(slides = site.heroSlides) {
+  return slides
+    .map((slide, index) => {
+      const sit = slide.src.includes('sit') ? ' hero-slide--sit' : ''
+      return `
+        <figure class="hero-slide${index === 0 ? ' is-on' : ''}${sit}">
+          <img src="${slide.src}" alt="${slide.alt}" ${index === 0 ? '' : 'loading="lazy"'} />
         </figure>
-      `,
-    )
+      `
+    })
     .join('')
 }
 
-function infoStandeeDots() {
-  return site.infoStandees
+function linkCards() {
+  return site.social
     .map(
-      (_, index) => `
-        <button
-          type="button"
-          class="info-dot${index === 0 ? ' is-active' : ''}"
-          data-index="${index}"
-          aria-label="立ち絵 ${index + 1}"
-        ></button>
+      (item) => `
+        <a class="go panel" href="${item.href}" target="_blank" rel="noopener noreferrer" data-reveal>
+          <img src="${item.icon}" alt="" width="52" height="52" />
+          <span>
+            <strong>${item.label}</strong>
+            <small>${item.handle}</small>
+          </span>
+          <i class="go__arr" aria-hidden="true">↗</i>
+        </a>
       `,
     )
     .join('')
 }
 
 document.querySelector('#app').innerHTML = `
+  <div class="bg" aria-hidden="true">
+    <img class="bg__img bg__img--top" src="${site.backgrounds.top}" alt="" />
+    <img class="bg__img bg__img--bottom" src="${site.backgrounds.bottom}" alt="" />
+  </div>
   <div class="page">
-    <header class="site-header">
-      <div class="site-header__inner">
-        <a class="site-logo" href="#start">
-          <img src="/images/icon.png" alt="" width="40" height="40" />
-          <span>${site.name}</span>
-        </a>
-        <nav class="site-nav" aria-label="メイン">
-          <ul class="site-nav__list">
-            ${navLinks('site-nav__link')}
-          </ul>
-        </nav>
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="mobile-nav"
-          aria-label="メニューを開く"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-    </header>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="メニューを開く">
+      <img class="burger__mark burger__mark--open" src="/images/menu-mark.png" alt="" />
+      <img class="burger__mark burger__mark--close" src="/images/menu-close.png" alt="" />
+    </button>
 
-    <div id="mobile-nav" class="mobile-nav" hidden>
-      <button class="mobile-nav__backdrop" type="button" aria-label="メニューを閉じる"></button>
-      <nav class="mobile-nav__panel" aria-label="モバイルメニュー">
-        <p class="mobile-nav__title">MENU</p>
-        <ul class="mobile-nav__list">
-          ${navLinks('mobile-nav__link')}
-        </ul>
+    <div id="drawer" class="drawer" hidden>
+      <button class="drawer__dim" type="button" aria-label="メニューを閉じる"></button>
+      <nav class="drawer__sheet" aria-label="メニュー">
+        <p class="drawer__ghost" aria-hidden="true">MENU</p>
+        <a class="drawer__logo" href="#start"><img src="${site.logo}" alt="${site.name}" /></a>
+        <span class="end__rule" aria-hidden="true"><i></i><b></b><i></i></span>
+        <ul>${drawerLinks()}</ul>
+        <div class="drawer__social">
+          ${site.social
+            .map(
+              (item) => `
+                <a href="${item.href}" target="_blank" rel="noopener noreferrer" aria-label="${item.label}">
+                  <img src="${item.icon}" alt="" width="28" height="28" />
+                </a>
+              `,
+            )
+            .join('')}
+        </div>
       </nav>
     </div>
 
     <main>
-      <section id="start" class="hero section">
-        <div class="hero__content">
-          <p class="eyebrow">${site.role}</p>
-          <div class="hero__title-block">
-            <div class="hero__title-ornament" aria-hidden="true">
-              <span class="hero__title-line"></span>
-              <span class="hero__title-diamond"></span>
-              <span class="hero__title-line hero__title-line--short"></span>
-            </div>
-            <div class="hero__title-frame">
-              <span class="hero__title-shimmer" aria-hidden="true"></span>
-              <span class="hero__title-corner hero__title-corner--tl" aria-hidden="true"></span>
-              <span class="hero__title-corner hero__title-corner--br" aria-hidden="true"></span>
-              <h1 class="hero__name">${heroDisplayName(site.name)}</h1>
-              <p class="hero__name-en">${site.nameEn}</p>
-            </div>
+      <section id="start" class="hero" data-hero-slider>
+        <div class="hero__fx" aria-hidden="true"></div>
+        <div class="hero__board">
+          <div class="nameplate">
+            <span class="nameplate__rule" aria-hidden="true"><i></i><b></b><i></i></span>
+            <p class="hero__kicker">${site.role}</p>
+            <h1><span>${site.name[0]}</span>${site.name.slice(1)}</h1>
+            <p class="hero__en">${site.nameEn}</p>
+            <span class="nameplate__rule nameplate__rule--flip" aria-hidden="true"><i></i><b></b><i></i></span>
           </div>
-          <ul class="footer-social__list hero__social-list">${footerSocialLinks()}</ul>
+          <div class="hero__pills">${socialPills()}</div>
         </div>
-        <div class="hero__visual">
-          <div class="hero__frame">
-            <img src="/images/hero-radio.png" alt="ラジオスタジオで配信する橙々しじまと相棒の猫" />
+        <div class="hero__slides">${heroSlides()}</div>
+      </section>
+
+      <section id="abuku" class="hero hero--flip" data-hero-slider>
+        <div class="hero__fx" aria-hidden="true"></div>
+        <div class="hero__slides">${heroSlides(site.abukuHero.slides)}</div>
+        <div class="hero__board">
+          <div class="nameplate">
+            <span class="nameplate__rule" aria-hidden="true"><i></i><b></b><i></i></span>
+            <p class="hero__kicker">${site.abukuHero.role}</p>
+            <h2 class="hero__name"><span>${site.abukuHero.name[0]}</span>${site.abukuHero.name.slice(1)}</h2>
+            <p class="hero__en">${site.abukuHero.nameEn}</p>
+            <span class="nameplate__rule nameplate__rule--flip" aria-hidden="true"><i></i><b></b><i></i></span>
+          </div>
+          <div class="hero__pills hero__pills--abuku">${abukuPills()}</div>
+        </div>
+      </section>
+
+      <section id="about" class="band">
+        <p class="band__ghost" aria-hidden="true">ABOUT</p>
+        <div class="band__in about__in">
+          <figure class="about__art" data-reveal>
+            <img src="${site.about.image}" alt="${site.about.imageAlt}" loading="lazy" />
+          </figure>
+          <div class="about__text panel" data-reveal>
+            <p class="lbl">ABOUT<span>${site.infoTitle}</span></p>
+            <h2 class="about__name">${site.name}<small>${site.nameReading}</small></h2>
+            <div class="about__lead">
+              ${site.about.lead.map((p) => `<p>${p}</p>`).join('')}
+            </div>
+            <dl class="about__facts">
+              ${site.about.facts
+                .map(
+                  (fact) => `
+                    <div>
+                      <dt>${fact.label}</dt>
+                      <dd>${fact.value}</dd>
+                    </div>
+                  `,
+                )
+                .join('')}
+            </dl>
           </div>
         </div>
       </section>
 
-      <section id="info" class="section info-section">
-        <div class="info-layout">
-          <div class="info-visual" data-info-slider data-reveal="left">
-            <div class="info-visual__frame">
-              ${infoStandeeSlides()}
-            </div>
-            <div class="info-visual__controls">
-              <button type="button" class="info-btn" data-info-prev aria-label="前の立ち絵">‹</button>
-              <div class="info-visual__dots">${infoStandeeDots()}</div>
-              <button type="button" class="info-btn" data-info-next aria-label="次の立ち絵">›</button>
+      <section class="band" aria-labelledby="novels-title">
+        <p class="band__ghost" aria-hidden="true">NOLA</p>
+        <div class="band__in">
+          <div class="block__head" data-reveal>
+            <div>
+              <p class="lbl">${site.novels.label}</p>
+              <h2 id="novels-title">${site.novels.title}</h2>
             </div>
           </div>
-
-          <article class="info-panel" data-reveal="right" style="transition-delay: 0.1s">
-            <header class="info-panel__head">
-              <p class="info-panel__number" aria-hidden="true">01</p>
-              <div>
-                <p class="info-panel__label">INFO</p>
-                <h2 class="info-panel__title">${site.infoTitle}</h2>
-              </div>
-            </header>
-            <div class="info-panel__body">
-              <p class="info-panel__lead">${site.intro}</p>
-              <div class="info-panel__rule" aria-hidden="true"></div>
-              <p class="info-panel__note">${site.about}</p>
-            </div>
-          </article>
+          <div class="novel-grid">${novelCards()}</div>
         </div>
       </section>
 
-      <section id="profile" class="section profile-section">
-        <div class="section-head" data-reveal>
-          <p class="section-number">02</p>
-          <div>
-            <p class="section-label">PROFILE</p>
-            <h2>橙々しじま &amp; あぶく</h2>
+      <section id="profile" class="band">
+        <p class="band__ghost" aria-hidden="true">PROFILE</p>
+        <div class="band__in">
+          <div class="block__head" data-reveal>
+            <div>
+              <p class="lbl">PROFILE</p>
+              <h2>橙々しじま &amp; あぶく</h2>
+            </div>
           </div>
-        </div>
-        <div class="profile-duo">
-          ${profileCards()}
+          <div class="who-grid">${profileCards()}</div>
         </div>
       </section>
 
-      <section id="tags" class="section tags-section">
-        <div class="section-head" data-reveal>
-          <p class="section-number">03</p>
-          <div>
-            <p class="section-label">TAGS</p>
-            <h2>公式タグ</h2>
+      <section id="tags" class="band">
+        <p class="band__ghost" aria-hidden="true">TAGS</p>
+        <div class="band__in">
+          <div class="block__head" data-reveal>
+            <div>
+              <p class="lbl">TAGS</p>
+              <h2>公式タグ</h2>
+            </div>
           </div>
-        </div>
-        <div class="tags-grid">
-          ${tagCards()}
+          <div class="hash-grid">${tagCards()}</div>
         </div>
       </section>
 
-      <section id="stream" class="section stream-section">
-        <div class="section-head" data-reveal>
-          <p class="section-number">04</p>
-          <div>
-            <p class="section-label">STREAM</p>
-            <h2>配信について</h2>
+      <section id="link" class="band">
+        <p class="band__ghost" aria-hidden="true">LINK</p>
+        <div class="band__in">
+          <div class="block__head" data-reveal>
+            <div>
+              <p class="lbl">LINK</p>
+              <h2>SNS・リンク</h2>
+            </div>
           </div>
-        </div>
-        <div class="stream-grid">
-          ${streamCards()}
-        </div>
-        <div class="stream-account-links" data-reveal>
-          ${socialIconLinks()}
+          <div class="go-grid">${linkCards()}</div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="footer-top-row" data-reveal>
-          <div class="footer-brand">
-            <a class="footer-brand__link" href="#start">
-              <span class="footer-brand__avatar-wrap">
-                <img src="/images/icon.png" alt="" width="72" height="72" />
-              </span>
-              <div class="footer-brand__identity">
-                <p class="footer-brand__title">
-                  <span class="footer-brand__name">${site.name}</span>
-                  <span class="footer-brand__name-en">${site.nameEn}</span>
-                </p>
-                <p class="footer-brand__role">${site.role}</p>
-              </div>
-            </a>
-          </div>
-
-          <nav class="footer-nav" aria-label="フッターナビ">
-            <p class="footer-heading">SITE MAP</p>
-            <ul>${footerNavLinks()}</ul>
-          </nav>
-        </div>
-
-        <div class="footer-social" data-reveal style="transition-delay: 0.1s">
-          <p class="footer-heading">FOLLOW</p>
-          <ul class="footer-social__list">${footerSocialLinks()}</ul>
-        </div>
+    <footer class="end">
+      <span class="end__rule" aria-hidden="true"><i></i><b></b><i></i></span>
+      <a class="end__brand" href="#start">
+        <img class="end__logo" src="${site.logo}" alt="${site.name}" />
+      </a>
+      <p class="end__role">${site.role}</p>
+      <nav class="end__nav" aria-label="フッター">
+        <ul>${navLinks('end__a')}</ul>
+      </nav>
+      <div class="end__social">
+        ${site.social
+          .map(
+            (item) => `
+              <a href="${item.href}" target="_blank" rel="noopener noreferrer" aria-label="${item.label}">
+                <img src="${item.icon}" alt="" width="28" height="28" />
+              </a>
+            `,
+          )
+          .join('')}
       </div>
-
-      <div class="footer-bottom">
-        <a class="footer-top" href="#start">PAGE TOP ↑</a>
-        <p class="footer-copy">
-          <small>© ${new Date().getFullYear()} ${site.name}. All rights reserved.</small>
-        </p>
-      </div>
+      <p class="end__copy">
+        <small>© ${new Date().getFullYear()} ${site.name}</small>
+        <small>制作：${site.credit}</small>
+      </p>
     </footer>
   </div>
 `
 
-const menuToggle = document.querySelector('.menu-toggle')
-const mobileNav = document.querySelector('#mobile-nav')
-const mobileBackdrop = document.querySelector('.mobile-nav__backdrop')
+const burger = document.querySelector('.burger')
+const drawer = document.querySelector('#drawer')
+const scrollKeys = new Set([' ', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown', 'Home', 'End'])
+let lockedScrollY = 0
 
-function setMobileNavOpen(isOpen) {
-  menuToggle?.setAttribute('aria-expanded', String(isOpen))
-  menuToggle?.setAttribute('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く')
-  if (mobileNav) mobileNav.hidden = !isOpen
-  document.body.classList.toggle('nav-open', isOpen)
+function drawerSheet() {
+  return drawer?.querySelector('.drawer__sheet')
 }
 
-menuToggle?.addEventListener('click', () => {
-  setMobileNavOpen(menuToggle.getAttribute('aria-expanded') !== 'true')
+function eventInSheet(event) {
+  const sheet = drawerSheet()
+  return Boolean(sheet && event.target instanceof Node && sheet.contains(event.target))
+}
+
+function setDrawer(open) {
+  if (open) lockedScrollY = window.scrollY
+  burger?.setAttribute('aria-expanded', String(open))
+  burger?.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く')
+  if (drawer) drawer.hidden = !open
+  document.body.classList.toggle('nav-open', open)
+}
+
+function blockBackgroundScroll(event) {
+  if (!document.body.classList.contains('nav-open') || eventInSheet(event)) return
+  event.preventDefault()
+}
+
+burger?.addEventListener('click', () => {
+  setDrawer(burger.getAttribute('aria-expanded') !== 'true')
 })
-
-mobileBackdrop?.addEventListener('click', () => setMobileNavOpen(false))
-
-mobileNav?.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => setMobileNavOpen(false))
+drawer?.querySelector('.drawer__dim')?.addEventListener('click', () => setDrawer(false))
+drawer?.querySelectorAll('a').forEach((link) => {
+  link.addEventListener('click', () => setDrawer(false))
 })
-
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && mobileNav && !mobileNav.hidden) {
-    setMobileNavOpen(false)
+  if (!document.body.classList.contains('nav-open')) return
+  if (event.key === 'Escape') {
+    setDrawer(false)
+    return
   }
+  if (!scrollKeys.has(event.key) || eventInSheet(event)) return
+  event.preventDefault()
+})
+window.addEventListener('wheel', blockBackgroundScroll, { passive: false })
+window.addEventListener('touchmove', blockBackgroundScroll, { passive: false })
+window.addEventListener('scroll', () => {
+  if (!document.body.classList.contains('nav-open') || window.scrollY === lockedScrollY) return
+  window.scrollTo(0, lockedScrollY)
 })
 
-const navLinkElements = document.querySelectorAll('[data-nav]')
+const navEls = document.querySelectorAll('[data-nav]')
 const sections = navItems.map((item) => document.getElementById(item.id)).filter(Boolean)
 
-if (sections.length > 0 && navLinkElements.length > 0) {
+if (sections.length && navEls.length) {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
-        navLinkElements.forEach((link) => {
-          const isActive = link.dataset.nav === entry.target.id
-          link.classList.toggle('is-active', isActive)
-          link.setAttribute('aria-current', isActive ? 'true' : 'false')
+        navEls.forEach((link) => {
+          const on = link.dataset.nav === entry.target.id
+          link.classList.toggle('is-on', on)
         })
       })
     },
     { rootMargin: '-35% 0px -55% 0px', threshold: 0 },
   )
-
   sections.forEach((section) => observer.observe(section))
-  navLinkElements[0]?.classList.add('is-active')
-  navLinkElements[0]?.setAttribute('aria-current', 'true')
+  navEls[0]?.classList.add('is-on')
 }
 
-const infoSlider = document.querySelector('[data-info-slider]')
-if (infoSlider) {
-  const slides = [...infoSlider.querySelectorAll('.info-slide')]
-  const dots = [...infoSlider.querySelectorAll('.info-dot')]
-  let current = 0
+{
+  const root = document.documentElement
+  const heroes = document.querySelectorAll('.hero')
+  const clamp01 = (v) => Math.min(1, Math.max(0, v))
+  const smooth = (t) => t * t * (3 - 2 * t)
+  let queued = false
 
-  const showSlide = (index) => {
-    current = (index + slides.length) % slides.length
-    slides.forEach((slide, i) => slide.classList.toggle('is-active', i === current))
-    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current))
+  const update = () => {
+    queued = false
+    const y = window.scrollY
+    const vh = window.innerHeight
+    const lastHero = heroes[heroes.length - 1]
+    const heroEnd = lastHero ? lastHero.offsetTop + lastHero.offsetHeight : 0
+    // HERO/HERO2 の間は強くぼかし、HERO2 を抜けきる1画面分で解像
+    const focus = smooth(clamp01((y - (heroEnd - vh)) / vh))
+    // HERO 以降のコンテンツ領域の中央を挟んだ1画面分で上→下の背景へクロスフェード
+    const max = Math.max(1, root.scrollHeight - vh)
+    const contentStart = Math.min(max, Math.max(0, heroEnd - vh))
+    const mid = (contentStart + max) / 2
+    const mix = smooth(clamp01((y - (mid - vh / 2)) / vh))
+    root.style.setProperty('--bg-blur', `${(1 - focus) * 26}px`)
+    root.style.setProperty('--bg-mix', mix.toFixed(3))
   }
 
-  infoSlider.querySelector('[data-info-prev]')?.addEventListener('click', () => showSlide(current - 1))
-  infoSlider.querySelector('[data-info-next]')?.addEventListener('click', () => showSlide(current + 1))
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => showSlide(Number(dot.dataset.index)))
+  const request = () => {
+    if (queued) return
+    queued = true
+    window.requestAnimationFrame(update)
+  }
+
+  window.addEventListener('scroll', request, { passive: true })
+  window.addEventListener('resize', request)
+  update()
+}
+
+document.querySelectorAll('[data-hero-slider]').forEach((heroSlider) => {
+  const slides = [...heroSlider.querySelectorAll('.hero-slide')]
+  if (slides.length < 2) return
+  const intervalMs = 3000
+  let current = 0
+  let timer = 0
+
+  const show = (index) => {
+    current = (index + slides.length) % slides.length
+    slides.forEach((slide, i) => slide.classList.toggle('is-on', i === current))
+  }
+
+  const play = () => {
+    stop()
+    timer = window.setInterval(() => show(current + 1), intervalMs)
+  }
+
+  const stop = () => window.clearInterval(timer)
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop()
+    else play()
   })
 
-  if (slides.length > 1) {
-    let timer = setInterval(() => showSlide(current + 1), 5000)
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        clearInterval(timer)
-      } else {
-        timer = setInterval(() => showSlide(current + 1), 5000)
-      }
-    })
-  }
-}
+  play()
+})
 
-// ─── スクロールリビール ────────────────────────────
-const revealElements = document.querySelectorAll('[data-reveal]')
-if (revealElements.length > 0) {
-  const revealObserver = new IntersectionObserver(
+document.querySelectorAll('[data-reveal]').forEach((el) => {
+  const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
-        entry.target.classList.add('is-visible')
-        revealObserver.unobserve(entry.target)
+        entry.target.classList.add('is-in')
+        io.unobserve(entry.target)
       })
     },
-    { rootMargin: '0px 0px -6% 0px', threshold: 0.08 },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
   )
-  revealElements.forEach((el) => revealObserver.observe(el))
-}
+  io.observe(el)
+})

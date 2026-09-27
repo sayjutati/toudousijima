@@ -10,50 +10,96 @@ export const site = {
   description:
     '橙々しじま（とうどうしじま）公式サイト。雑談、ひとりごと、ときどき脱線。配信告知・SNSリンクはこちら。',
   siteUrl: 'https://www.toudousijima.com',
-  ogImage: '/images/hero-radio.png',
-  infoTitle: 'お会いできて光栄です',
-  intro:
-    'みなさま初めまして、橙々しじまと申します。マイクの向こうから、雑談や音楽、ときには深い話やそうでもない話まで——ゆったりとした時間をお届けいたします。落ち着いた空間で、どこかにそっと寄り添えたら幸いです。',
-  about:
-    '配信ではコメントとの対話を楽しみながら、リスナーの皆さんと素敵な時間を過ごせたらと思います。',
-  infoStandees: [
-    {
-      src: '/images/stand-holding-cat.png',
-      alt: '猫を抱える橙々しじま',
-    },
-    {
-      src: '/images/stand-mansion.png',
-      alt: '橙々しじま 立ち絵',
-    },
+  ogImage: '/images/logo.png',
+  heroSlides: [
+    { src: '/images/hero-stand.png', alt: '橙々しじま' },
+    { src: '/images/hero-back.png', alt: '橙々しじま 後ろ姿' },
+    { src: '/images/hero-sit.png', alt: '橙々しじま 座り' },
   ],
+  logo: '/images/logo.png',
+  backgrounds: {
+    top: '/images/bg-night.jpg',
+    bottom: '/images/bg-day.jpg',
+  },
+  abukuHero: {
+    name: 'あぶく',
+    nameEn: 'ABUKU',
+    role: '相棒の三又猫',
+    slides: [
+      { src: '/images/abuku-1.png', alt: 'あぶく' },
+      { src: '/images/abuku-2.png', alt: 'あぶく 歩き' },
+      { src: '/images/abuku-3.png', alt: 'あぶく 後ろ姿' },
+    ],
+  },
+  infoTitle: '自己紹介',
+  nameReading: 'とうとう しじま',
+  about: {
+    image: '/images/hero-sit.png',
+    imageAlt: '橙々しじま 座り',
+    lead: [
+      '橙々しじまと申します。',
+      'いろいろなことに手を出しているユーモアのあるおじさん。専門家ではないけどいろいろやってる人。',
+    ],
+    facts: [
+      { label: '活動の軸', value: '小説作家と動画投稿。' },
+      { label: '小説', value: 'ペンネーム三二　一（みつに　はじめ）でやってます。' },
+      { label: '動画', value: '主にTikTokで、頭に浮かんだ音を流してます。' },
+    ],
+  },
+  // href が空の枠は「準備中」。増やすと3列の次の段に並ぶ
+  novels: {
+    label: 'NOLA',
+    title: '過去執筆作品一覧',
+    items: [
+      {
+        title: '超過学級　ー修学旅行編ー',
+        author: '三二　一',
+        platform: 'Nola',
+        cover: '/images/novel-choka.jpg',
+        summary: '緩く変な学園ものをシリーズで書いてます。記念すべき1作品目',
+        href: 'https://story.nola-novel.com/novel/N-18716818-c73f-4290-9aa5-9e6b52809590',
+      },
+      {
+        title: '砂の城',
+        author: '三二　一',
+        platform: 'Nola',
+        cover: '/images/novel-suna.jpg',
+        summary: '世界が砂になった日、僕は夢の城を目指して歩き出した。',
+        href: 'https://story.nola-novel.com/novel/N-dfe20eb4-a20b-49bd-a957-e40e1d82ffec',
+      },
+      { title: '準備中', href: '' },
+    ],
+  },
   profiles: [
     {
       label: 'HOST',
       name: '橙々しじま',
       nameEn: 'TOUDOU SIJIMA',
-      image: '/images/icon.png',
+      image: '',
       imageAlt: '橙々しじま',
+      tagline: '好きなことを好きなだけ。',
       fields: [
         { label: '誕生日', value: '10月10日' },
         { label: '身長', value: '179cm' },
-        { label: '飲み物', value: '水' },
-        { label: '口癖', value: 'みんなで探してみて' },
-        { label: '弱点', value: '集合した虫' },
-        { label: '趣味', value: 'マスクの中で変顔' },
+        { label: '活動', value: '小説作家・動画投稿' },
+        { label: 'ペンネーム', value: '三二　一（みつに　はじめ）' },
+        { label: '動画', value: 'TikTok、Youtube' },
       ],
     },
     {
       label: 'PARTNER',
       name: 'あぶく',
       nameEn: 'ABUKU',
-      image: '/images/cat-front.png',
+      image: '',
       imageAlt: 'あぶく',
+      tagline: 'しじまの相棒。泡のように出てきては消える。',
       fields: [
-        { label: '種族', value: '三又猫' },
-        { label: '年齢', value: '不明' },
-        { label: '身長', value: '50〜70cm（可変式）' },
+        { label: '種族', value: '三又の白猫' },
+        { label: '年齢', value: '7歳' },
+        { label: '大きさ', value: '50〜70cm（可変式）' },
         { label: '体重', value: '3.3kg' },
-        { label: '好きな食べ物', value: 'ささみ' },
+        { label: '首輪', value: '赤い首輪の飾り' },
+        { label: '好物', value: 'ささみ' },
       ],
     },
   ],
@@ -79,40 +125,12 @@ export const site = {
     },
   ],
   tags: [
-    {
-      category: '配信タグ',
-      hashtag: '#しじらじ',
-      uses: ['配信感想', '配信実況', '番組関連全般'],
-    },
-    {
-      category: 'ファンアートタグ',
-      hashtag: '#しじあーと',
-      uses: [
-        '橙々しじまのファンアート',
-        'あぶくを含むイラスト',
-        '配信やラジオに関連する創作作品',
-      ],
-      variant: 'fanart',
-    },
-    {
-      category: 'お便り・質問募集タグ',
-      hashtag: '#しじま便',
-      uses: ['橙々しじま宛のお便り', '質問', '相談', '配信で読んでほしい内容'],
-      hasMarshmallow: true,
-    },
-    {
-      category: 'お便り・質問募集タグ',
-      hashtag: '#あぶく便',
-      uses: [
-        'あぶく宛のお便り',
-        'あぶくへの質問',
-        'あぶくに聞いてみたいこと',
-        'あぶく目線で答えてほしい内容',
-      ],
-      variant: 'partner',
-      hasMarshmallow: true,
-    },
+    { hashtag: '#三二一' },
+    { hashtag: '#しじまーと' },
+    { hashtag: '#しじま便' },
+    { hashtag: '#あぶく銭' },
   ],
+  credit: '火日',
   marshmallow: {
     href: 'https://t.co/hOrVIRN6vZ',
   },
@@ -144,6 +162,20 @@ export const site = {
       handle: '橙々しじま',
       href: 'https://u8kv3.app.goo.gl/4Z6TJ',
       icon: '/icons/spoon.png',
+    },
+    {
+      id: 'tiktok',
+      label: 'TikTok',
+      handle: '@toudousijima',
+      href: 'https://www.tiktok.com/@toudousijima',
+      icon: '/icons/tiktok.svg',
+    },
+    {
+      id: 'marshmallow',
+      label: 'マシュマロ',
+      handle: 'お便り',
+      href: 'https://t.co/hOrVIRN6vZ',
+      icon: '/icons/marshmallow.svg',
     },
   ],
 }
