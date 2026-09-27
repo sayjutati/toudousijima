@@ -10,7 +10,7 @@ export const site = {
   description:
     '橙々しじま（とうどうしじま）公式サイト。雑談、ひとりごと、ときどき脱線。配信告知・SNSリンクはこちら。',
   siteUrl: 'https://www.toudousijima.com',
-  ogImage: '/images/logo.png',
+  ogImage: '/images/og.jpg',
   heroSlides: [
     { src: '/images/hero-stand.png', alt: '橙々しじま' },
     { src: '/images/hero-back.png', alt: '橙々しじま 後ろ姿' },
