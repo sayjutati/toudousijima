@@ -128,12 +128,12 @@ function tagCards() {
 }
 
 function abukuPills() {
-  const tag = site.tags.find((item) => item.hashtag === '#あぶく銭')
+  const tag = site.tags.find((item) => item.hashtag === '#あぶくの足跡')
   if (!tag) return ''
   return `
     <a class="pill" href="${xHashtagSearchUrl(tag.hashtag)}" target="_blank" rel="noopener noreferrer">
       <span class="pill__mark" aria-hidden="true">#</span>
-      <span>あぶく銭</span>
+      <span>あぶくの足跡</span>
     </a>
   `
 }

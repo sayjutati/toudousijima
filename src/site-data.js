@@ -128,7 +128,7 @@ export const site = {
     { hashtag: '#三二一' },
     { hashtag: '#しじまーと' },
     { hashtag: '#しじま便' },
-    { hashtag: '#あぶく銭' },
+    { hashtag: '#あぶくの足跡' },
   ],
   credit: '火日',
   marshmallow: {
