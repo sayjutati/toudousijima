@@ -183,7 +183,7 @@ document.querySelector('#app').innerHTML = `
       <button class="drawer__dim" type="button" aria-label="メニューを閉じる"></button>
       <nav class="drawer__sheet" aria-label="メニュー">
         <p class="drawer__ghost" aria-hidden="true">MENU</p>
-        <a class="drawer__logo" href="#start"><img src="${site.logo}" alt="${site.name}" /></a>
+        <a class="drawer__logo" href="#start"><img src="/images/logo-menu.png" alt="${site.name}" /></a>
         <span class="end__rule" aria-hidden="true"><i></i><b></b><i></i></span>
         <ul>${drawerLinks()}</ul>
         <div class="drawer__social">
