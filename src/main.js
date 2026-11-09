@@ -1,9 +1,11 @@
 import './style.css'
+import { inject } from '@vercel/analytics'
 import { site } from './site-data.js'
+
+inject()
 
 const navItems = [
   { id: 'start', label: 'TOP', jp: 'トップ' },
-  { id: 'abuku', label: 'ABUKU', jp: 'あぶく' },
   { id: 'about', label: 'ABOUT', jp: '自己紹介' },
   { id: 'profile', label: 'PROFILE', jp: 'プロフィール' },
   { id: 'tags', label: 'TAGS', jp: '公式タグ' },
@@ -127,17 +129,6 @@ function tagCards() {
     .join('')
 }
 
-function abukuPills() {
-  const tag = site.tags.find((item) => item.hashtag === '#あぶくの足跡')
-  if (!tag) return ''
-  return `
-    <a class="pill" href="${xHashtagSearchUrl(tag.hashtag)}" target="_blank" rel="noopener noreferrer">
-      <span class="pill__mark" aria-hidden="true">#</span>
-      <span>あぶくの足跡</span>
-    </a>
-  `
-}
-
 function heroSlides(slides = site.heroSlides) {
   return slides
     .map((slide, index) => {
@@ -216,21 +207,6 @@ document.querySelector('#app').innerHTML = `
         <div class="hero__slides">${heroSlides()}</div>
       </section>
 
-      <section id="abuku" class="hero hero--flip" data-hero-slider>
-        <div class="hero__fx" aria-hidden="true"></div>
-        <div class="hero__slides">${heroSlides(site.abukuHero.slides)}</div>
-        <div class="hero__board">
-          <div class="nameplate">
-            <span class="nameplate__rule" aria-hidden="true"><i></i><b></b><i></i></span>
-            <p class="hero__kicker">${site.abukuHero.role}</p>
-            <h2 class="hero__name"><span>${site.abukuHero.name[0]}</span>${site.abukuHero.name.slice(1)}</h2>
-            <p class="hero__en">${site.abukuHero.nameEn}</p>
-            <span class="nameplate__rule nameplate__rule--flip" aria-hidden="true"><i></i><b></b><i></i></span>
-          </div>
-          <div class="hero__pills hero__pills--abuku">${abukuPills()}</div>
-        </div>
-      </section>
-
       <section id="about" class="band">
         <p class="band__ghost" aria-hidden="true">ABOUT</p>
         <div class="band__in about__in">
@@ -278,7 +254,7 @@ document.querySelector('#app').innerHTML = `
           <div class="block__head" data-reveal>
             <div>
               <p class="lbl">PROFILE</p>
-              <h2>橙々しじま &amp; あぶく</h2>
+              <h2>橙々しじま</h2>
             </div>
           </div>
           <div class="who-grid">${profileCards()}</div>

@@ -541,6 +541,11 @@ h2 {
   grid-template-columns: 1fr 1fr;
 }
 
+.who-grid > :only-child,
+.hash-grid > :only-child {
+  grid-column: 1 / -1;
+}
+
 /* 写真背景の上に載せる読みやすさ用パネル */
 .panel {
   padding: 1.4rem 1.5rem;

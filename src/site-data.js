@@ -6,9 +6,9 @@
 export const site = {
   name: '橙々しじま',
   nameEn: 'TOUDOU SIJIMA',
-  role: '雑談、ひとりごと、ときどき脱線',
+  role: '余白に少しの心を描いた',
   description:
-    '橙々しじま（とうどうしじま）公式サイト。雑談、ひとりごと、ときどき脱線。配信告知・SNSリンクはこちら。',
+    '橙々しじま（とうどうしじま）公式サイト。余白に少しの心を描いた。配信告知・SNSリンクはこちら。',
   siteUrl: 'https://www.toudousijima.com',
   ogImage: '/images/og.jpg',
   heroSlides: [
@@ -21,16 +21,6 @@ export const site = {
     top: '/images/bg-night.jpg',
     bottom: '/images/bg-day.jpg',
   },
-  abukuHero: {
-    name: 'あぶく',
-    nameEn: 'ABUKU',
-    role: '相棒の三又猫',
-    slides: [
-      { src: '/images/abuku-1.png', alt: 'あぶく' },
-      { src: '/images/abuku-2.png', alt: 'あぶく 歩き' },
-      { src: '/images/abuku-3.png', alt: 'あぶく 後ろ姿' },
-    ],
-  },
   infoTitle: '自己紹介',
   nameReading: 'とうとう しじま',
   about: {
@@ -38,12 +28,11 @@ export const site = {
     imageAlt: '橙々しじま 座り',
     lead: [
       '橙々しじまと申します。',
-      'いろいろなことに手を出しているユーモアのあるおじさん。専門家ではないけどいろいろやってる人。',
+      'どうも、自滅系作家の橙々しじまです',
     ],
     facts: [
-      { label: '活動の軸', value: '小説作家と動画投稿。' },
+      { label: '活動の軸', value: '新米小説家' },
       { label: '小説', value: 'ペンネーム三二　一（みつに　はじめ）でやってます。' },
-      { label: '動画', value: '主にTikTokで、頭に浮かんだ音を流してます。' },
     ],
   },
   // href が空の枠は「準備中」。増やすと3列の次の段に並ぶ
@@ -93,22 +82,6 @@ export const site = {
         { label: '動画', value: 'TikTok、Youtube' },
       ],
     },
-    {
-      label: 'PARTNER',
-      name: 'あぶく',
-      nameEn: 'ABUKU',
-      image: '',
-      imageAlt: 'あぶく',
-      tagline: 'しじまの相棒。泡のように出てきては消える。',
-      fields: [
-        { label: '種族', value: '三又の白猫' },
-        { label: '年齢', value: '7歳' },
-        { label: '大きさ', value: '50〜70cm（可変式）' },
-        { label: '体重', value: '3.3kg' },
-        { label: '首輪', value: '赤い首輪の飾り' },
-        { label: '好物', value: 'ささみ' },
-      ],
-    },
   ],
   streams: [
     {
@@ -133,9 +106,8 @@ export const site = {
   ],
   tags: [
     { hashtag: '#三二一' },
-    { hashtag: '#しじまーと' },
-    { hashtag: '#しじま便' },
-    { hashtag: '#あぶくの足跡' },
+    // { hashtag: '#しじまーと' },
+    // { hashtag: '#しじま便' },
   ],
   credit: '火日',
   marshmallow: {

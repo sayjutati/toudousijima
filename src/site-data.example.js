@@ -67,7 +67,14 @@ export const site = {
         summary: '世界が砂になった日、僕は夢の城を目指して歩き出した。',
         href: 'https://story.nola-novel.com/novel/N-dfe20eb4-a20b-49bd-a957-e40e1d82ffec',
       },
-      { title: '準備中', href: '' },
+      {
+        title: '悪魔の天使',
+        author: '三二　一',
+        platform: 'Nola',
+        cover: '/images/novel-akuma.jpg',
+        summary: '三二　一の３作品目。弱さとは武器でありそれもまた一つの生き方',
+        href: 'https://story.nola-novel.com/novel/N-683d4775-2b3f-4903-b96f-72240ce1a77a',
+      },
     ],
   },
   profiles: [
