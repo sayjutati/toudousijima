@@ -12,6 +12,18 @@ const navItems = [
   { id: 'link', label: 'LINK', jp: 'リンク' },
 ]
 
+const BOOK_STRIPS = 8
+
+// 1枚の紙を短冊に分け、綴じ側から順に入れ子にする。めくり中に短冊ごとの角度差でしなる。
+function bookSheet(kind) {
+  const strip = (i) => `
+    <span class="pg" style="--i:${i};--j:${BOOK_STRIPS - 1 - i}">
+      <span class="pg__c pg__c--f"><i class="book__f">${kind === 'cover' ? '<u></u>' : ''}</i></span>
+      <span class="pg__c pg__c--b"><i class="book__b"></i></span>
+      ${i < BOOK_STRIPS - 1 ? strip(i + 1) : ''}
+    </span>`
+  return `<span class="book__sheet book__sheet--${kind}" style="--n:${BOOK_STRIPS}">${strip(0)}</span>`
+}
 function xHashtagSearchUrl(hashtag) {
   return `https://x.com/search?q=${encodeURIComponent(hashtag)}&src=typed_query&f=live`
 }
@@ -196,6 +208,14 @@ document.querySelector('#app').innerHTML = `
         <div class="hero__fx" aria-hidden="true"></div>
         <div class="hero__board">
           <div class="nameplate">
+            <span class="book" aria-hidden="true">
+              <span class="book__back"></span>
+              <span class="book__edge"></span>
+              <span class="book__base"></span>
+              ${bookSheet(`b`)}
+              ${bookSheet(`a`)}
+              ${bookSheet(`cover`)}
+            </span>
             <span class="nameplate__rule" aria-hidden="true"><i></i><b></b><i></i></span>
             <p class="hero__kicker">${site.role}</p>
             <h1><span>${site.name[0]}</span>${site.name.slice(1)}</h1>
