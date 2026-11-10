@@ -1418,7 +1418,7 @@ a.novel__title:focus-visible {
   color: var(--muted);
 }
 
-/* 試し読み。HERO の本と同じ紙で、右ページが開いて冒頭が現れる */
+/* 試し読み。HERO と同じ本が開き、開ききったら本物の見開きに入れ替わる */
 .peek {
   width: min(66rem, 94vw);
   max-width: none;
@@ -1436,14 +1436,32 @@ a.novel__title:focus-visible {
 }
 
 .peek__book {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-  perspective: 1800px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  perspective: 2000px;
+  container-type: inline-size;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
 }
 
-.peek[open] .peek__book {
-  animation: peek-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+/* 見開き全体と同じ大きさの本にして、着地した位置で本物のページと重なるようにする */
+.peek__flip {
+  --p: 50cqw;
+  z-index: 3;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.peek__flip .book__back,
+.peek__flip .book__edge,
+.peek__flip .book__base,
+.peek__flip .book__f,
+.peek__flip .book__b {
+  animation-delay: 2.3s;
+}
+
+.peek[open] .peek__page {
+  animation: peek-reveal 0.6s ease 1.95s both;
 }
 
 .peek__page {
@@ -1488,45 +1506,10 @@ a.novel__title:focus-visible {
   flex-direction: column;
   gap: 1rem;
   border-radius: 0 0.6rem 0.6rem 0;
-  transform-origin: left center;
-  backface-visibility: hidden;
 }
 
 .peek__page--r::after {
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.5), transparent 12%);
-}
-
-.peek[open] .peek__page--r {
-  animation: peek-turn 1.7s cubic-bezier(0.25, 0.75, 0.3, 1) 0.15s both;
-}
-
-.peek__page--r::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: inherit;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(255, 200, 140, 0.08) 55%, transparent);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.peek[open] .peek__page--r::before {
-  animation: peek-shade 1.5s ease-out 0.2s both;
-}
-
-.peek[open] .peek__text p,
-.peek[open] .peek__chapter {
-  animation: peek-line 0.9s ease both;
-  animation-delay: 1s;
-}
-
-.peek[open] .peek__text p:nth-child(2) {
-  animation-delay: 1.2s;
-}
-
-.peek[open] .peek__text p:nth-child(3) {
-  animation-delay: 1.4s;
 }
 
 /* あぶくをタップしたときに出るハートと泡 */
@@ -2116,53 +2099,12 @@ a.novel__title:focus-visible {
   }
 }
 
-@keyframes peek-in {
+@keyframes peek-reveal {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: none;
-  }
-}
-
-/* 紙がたわみながら開き、少し行き過ぎてふわりと落ち着く */
-@keyframes peek-turn {
-  0% {
-    transform: rotateY(-118deg) skewY(-7deg) scaleX(0.92);
-  }
-  40% {
-    transform: rotateY(-38deg) skewY(-3deg) scaleX(0.97);
-  }
-  72% {
-    transform: rotateY(5deg) skewY(0.8deg);
-  }
-  88% {
-    transform: rotateY(-1.5deg);
-  }
-  100% {
-    transform: none;
-  }
-}
-
-@keyframes peek-shade {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes peek-line {
-  from {
-    opacity: 0;
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
   }
 }
 
@@ -2214,24 +2156,6 @@ a.novel__title:focus-visible {
   100% {
     opacity: 0;
     transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1);
-  }
-}
-
-@keyframes peek-turn-down {
-  0% {
-    transform: rotateX(110deg) skewX(6deg) scaleY(0.92);
-  }
-  40% {
-    transform: rotateX(34deg) skewX(2deg) scaleY(0.97);
-  }
-  72% {
-    transform: rotateX(-5deg);
-  }
-  88% {
-    transform: rotateX(1.5deg);
-  }
-  100% {
-    transform: none;
   }
 }
 
@@ -2381,11 +2305,7 @@ a.novel__title:focus-visible {
   .hero__pills,
   .hero__latest,
   .novel__new,
-  .peek[open] .peek__book,
-  .peek[open] .peek__page--r,
-  .peek[open] .peek__page--r::before,
-  .peek[open] .peek__text p,
-  .peek[open] .peek__chapter {
+  .peek[open] .peek__page {
     animation: none;
   }
 
@@ -2402,6 +2322,12 @@ a.novel__title:focus-visible {
 
   .peek__book {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .peek__flip {
+    --p: 46cqw;
+    height: auto;
+    aspect-ratio: 6 / 5;
   }
 
   .peek__page--l {
@@ -2428,15 +2354,10 @@ a.novel__title:focus-visible {
   .peek__page--r {
     padding: 1.3rem 1.3rem 1.2rem;
     border-radius: 0 0 0.6rem 0.6rem;
-    transform-origin: center top;
   }
 
   .peek__page--r::after {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 12%);
-  }
-
-  .peek[open] .peek__page--r {
-    animation-name: peek-turn-down;
   }
 
   .peek__text {

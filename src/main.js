@@ -24,8 +24,21 @@ function bookSheet(kind) {
     </span>`
   return `<span class="book__sheet book__sheet--${kind}" style="--n:${BOOK_STRIPS}">${strip(0)}</span>`
 }
+
+function bookMarkup(extraClass = '') {
+  return `
+    <span class="book${extraClass ? ` ${extraClass}` : ''}" aria-hidden="true">
+      <span class="book__back"></span>
+      <span class="book__edge"></span>
+      <span class="book__base"></span>
+      ${bookSheet('b')}
+      ${bookSheet('a')}
+      ${bookSheet('cover')}
+    </span>`
+}
+// X のハッシュタグは空白で切れるので、表示用の全角スペースは検索語から除く
 function xHashtagSearchUrl(hashtag) {
-  return `https://x.com/search?q=${encodeURIComponent(hashtag)}&src=typed_query&f=live`
+  return `https://x.com/search?q=${encodeURIComponent(hashtag.replace(/[\s　]/g, ''))}&src=typed_query&f=live`
 }
 
 function navLinks(linkClass) {
@@ -222,14 +235,7 @@ document.querySelector('#app').innerHTML = `
         <div class="hero__fx" aria-hidden="true"></div>
         <div class="hero__board">
           <div class="nameplate">
-            <span class="book" aria-hidden="true">
-              <span class="book__back"></span>
-              <span class="book__edge"></span>
-              <span class="book__base"></span>
-              ${bookSheet(`b`)}
-              ${bookSheet(`a`)}
-              ${bookSheet(`cover`)}
-            </span>
+            ${bookMarkup()}
             <span class="nameplate__rule" aria-hidden="true"><i></i><b></b><i></i></span>
             <p class="hero__kicker">${site.role}</p>
             <h1><span>${site.name[0]}</span>${site.name.slice(1)}</h1>
@@ -364,6 +370,7 @@ document.querySelector('#app').innerHTML = `
 
   <dialog class="peek" aria-labelledby="peek-title">
     <div class="peek__book">
+      ${bookMarkup('peek__flip')}
       <div class="peek__page peek__page--l">
         <img class="peek__cover" alt="" />
         <p class="peek__plat">試し読み</p>

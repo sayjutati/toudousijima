@@ -139,7 +139,7 @@ export const site = {
     },
   ],
   tags: [
-    { hashtag: '#三二一' },
+    { hashtag: '#三二　一' },
     // { hashtag: '#しじまーと' },
     // { hashtag: '#しじま便' },
   ],

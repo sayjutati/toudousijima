@@ -139,7 +139,7 @@ export const site = {
     },
   ],
   tags: [
-    { hashtag: '#三二一' },
+    { hashtag: '#三二　一' },
     // { hashtag: '#しじまーと' },
     // { hashtag: '#しじま便' },
   ],
@@ -148,6 +148,15 @@ export const site = {
     href: 'https://t.co/hOrVIRN6vZ',
   },
   social: [
+    {
+      id: 'nola',
+      label: 'Nolaノベル',
+      handle: '三二　一',
+      note: '小説を読む',
+      feature: true,
+      href: 'https://story.nola-novel.com/user/U-2bc15e34-9d26-48c4-a4fa-5154d977948b',
+      icon: '/icons/nola.png',
+    },
     {
       id: 'twitter',
       label: 'X（Twitter）',
