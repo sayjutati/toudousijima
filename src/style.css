@@ -372,6 +372,11 @@ main {
   z-index: 1;
 }
 
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .7 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+  --grain-leather: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.55' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .8 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
 /*
  * 閉じた1冊の本が、綴じ側を軸に表紙とページをめくって見開きになり、
  * 見開きの上に名前が浮かび上がる。見開きの中心に綴じ目が来るよう本ごと横へずれる。
@@ -380,8 +385,6 @@ main {
 .book {
   --p: 46cqw;
   --t: calc(var(--p) * 0.045);
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .7 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
-  --grain-leather: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.55' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .8 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
   position: absolute;
   top: 50%;
   left: calc(50% - var(--p) / 2);
@@ -656,7 +659,7 @@ main {
 
 .hero__pills {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.65rem;
   width: 100%;
   margin-top: 1.8rem;
@@ -686,7 +689,10 @@ main {
 }
 
 .pill span:not(.pill__mark) {
-  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
   line-height: 1.2;
   letter-spacing: 0.02em;
 }
@@ -708,6 +714,55 @@ main {
   width: 40px;
   height: 40px;
   border-radius: 0.55rem;
+}
+
+/* 小説家としての本拠地なので Nola だけ 2 マス使い、ほかの SNS と差をつける */
+.pill--feature {
+  grid-column: span 2;
+  gap: 0.75rem;
+  padding-right: 1rem;
+  border-color: rgba(255, 170, 90, 0.55);
+  background:
+    linear-gradient(100deg, rgba(255, 193, 74, 0.16), rgba(255, 122, 50, 0.06) 55%, rgba(7, 8, 13, 0.62)),
+    rgba(7, 8, 13, 0.62);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.pill--feature:hover,
+.pill--feature:focus-visible {
+  border-color: var(--orange);
+  box-shadow: 0 0 22px rgba(255, 122, 50, 0.3);
+}
+
+.pill--feature img {
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 193, 74, 0.6);
+}
+
+.pill--feature span:not(.pill__mark) {
+  display: grid;
+  gap: 0.15rem;
+  font-family: var(--jp);
+  font-size: 1.02rem;
+  letter-spacing: 0.06em;
+}
+
+.pill--feature small {
+  color: #ffc98a;
+  font-family: var(--eng);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+
+.pill--feature > i {
+  margin-left: auto;
+  color: var(--orange);
+  font-style: normal;
+  transition: transform 0.22s ease;
+}
+
+.pill--feature:hover > i {
+  transform: translate(3px, -3px);
 }
 
 .block {
@@ -1202,6 +1257,7 @@ h2 {
 }
 
 .novel.panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -1238,9 +1294,74 @@ h2 {
   padding: 1rem 1.1rem 1.15rem;
 }
 
-a.novel:hover {
+.novel:not(.novel--soon):hover {
   border-color: rgba(255, 122, 50, 0.7);
   transform: translateY(-3px);
+}
+
+.novel:has(.novel__title:focus-visible) {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+/* カード全体を作品リンクにしつつ、試し読みボタンだけはその上で押せるようにする */
+a.novel__title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+a.novel__title:focus-visible {
+  outline: none;
+}
+
+.novel__new {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.28rem 0.6rem 0.24rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffc14a, #ff7a32);
+  color: #1a0d05;
+  font-family: var(--disp);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  box-shadow: 0 0 0 0 rgba(255, 122, 50, 0.55);
+  animation: new-pulse 2.4s ease-out infinite;
+}
+
+.novel__acts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.6rem;
+}
+
+.novel__peek {
+  position: relative;
+  z-index: 2;
+  padding: 0.42rem 0.85rem;
+  border: 1px solid rgba(255, 150, 70, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 122, 50, 0.1);
+  color: #ffd9b0;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.novel__peek:hover,
+.novel__peek:focus-visible {
+  border-color: var(--orange);
+  background: rgba(255, 122, 50, 0.24);
 }
 
 .novel__plat {
@@ -1253,6 +1374,9 @@ a.novel:hover {
 
 .novel__title {
   margin: 0;
+  display: block;
+  color: inherit;
+  text-decoration: none;
   font-family: var(--jp);
   font-size: 1.25rem;
   font-weight: 700;
@@ -1269,7 +1393,7 @@ a.novel:hover {
 }
 
 .novel__go {
-  margin-top: auto;
+  margin-left: auto;
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1292,10 +1416,442 @@ a.novel:hover {
   color: var(--muted);
 }
 
+/* 試し読み。HERO の本と同じ紙で、右ページが開いて冒頭が現れる */
+.peek {
+  width: min(66rem, 94vw);
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f1e3c6;
+  overflow: visible;
+}
+
+.peek::backdrop {
+  background: rgba(5, 3, 2, 0.74);
+  backdrop-filter: blur(6px);
+}
+
+.peek__book {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  perspective: 1800px;
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+}
+
+.peek[open] .peek__book {
+  animation: peek-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.peek__page {
+  position: relative;
+  min-width: 0;
+  padding: 2.2rem 2rem 1.8rem;
+  border: 1px solid rgba(255, 150, 70, 0.32);
+  background:
+    radial-gradient(ellipse at 50% 55%, rgba(255, 140, 60, 0.2), transparent 72%),
+    repeating-linear-gradient(0deg, rgba(255, 210, 140, 0.05) 0 1px, transparent 1px 14px),
+    var(--grain),
+    linear-gradient(160deg, #54402e, #33241a);
+  box-shadow:
+    inset 0 0 0 8px #33241a,
+    inset 0 0 0 9px rgba(255, 160, 80, 0.38);
+}
+
+.peek__page--l {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 0.6rem 0 0 0.6rem;
+  text-align: center;
+}
+
+.peek__page--l::after,
+.peek__page--r::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.peek__page--l::after {
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0.5), transparent 14%);
+}
+
+.peek__page--r {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-radius: 0 0.6rem 0.6rem 0;
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+
+.peek__page--r::after {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.5), transparent 12%);
+}
+
+.peek[open] .peek__page--r {
+  animation: peek-turn 1.7s cubic-bezier(0.25, 0.75, 0.3, 1) 0.15s both;
+}
+
+.peek__page--r::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(255, 200, 140, 0.08) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.peek[open] .peek__page--r::before {
+  animation: peek-shade 1.5s ease-out 0.2s both;
+}
+
+.peek[open] .peek__text p,
+.peek[open] .peek__chapter {
+  animation: peek-line 0.9s ease both;
+  animation-delay: 1s;
+}
+
+.peek[open] .peek__text p:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.peek[open] .peek__text p:nth-child(3) {
+  animation-delay: 1.4s;
+}
+
+/* あぶくをタップしたときに出るハートと泡 */
+.emote {
+  position: fixed;
+  z-index: 70;
+  pointer-events: none;
+  color: #ff7a8a;
+  font-size: 2.2rem;
+  line-height: 1;
+  text-shadow: 0 0 14px rgba(255, 110, 130, 0.7);
+  animation: emote-pop 1.3s ease-out forwards;
+}
+
+.emote--bubble {
+  width: var(--s);
+  height: var(--s);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.08) 60%);
+  animation: emote-bubble 1.1s ease-out forwards;
+}
+
+.who__photo--tap {
+  cursor: pointer;
+}
+
+.who__photo--tap.is-happy {
+  animation: abuku-happy 0.9s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.peek__cover {
+  width: min(62%, 11rem);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  margin-bottom: 0.8rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+}
+
+.peek__plat {
+  margin: 0;
+  font-family: var(--disp);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  color: var(--orange);
+}
+
+.peek__title {
+  margin: 0;
+  font-family: var(--jp);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+}
+
+.peek__by {
+  margin: 0;
+  color: #c9a06a;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+}
+
+.peek__chapter {
+  margin: 0;
+  font-family: var(--jp);
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  color: #ffc14a;
+}
+
+.peek__text {
+  height: 26rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  writing-mode: vertical-rl;
+  color: #fff6e6;
+  font-family: var(--jp);
+  font-size: 1.22rem;
+  line-height: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  letter-spacing: 0.06em;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 150, 70, 0.5) transparent;
+}
+
+.peek__text p {
+  margin: 0;
+  text-indent: 1em;
+}
+
+.peek__more {
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  color: #ffd9b0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.peek__more:hover {
+  color: #fff;
+}
+
+.peek__more i {
+  margin-left: 0.3rem;
+  font-style: normal;
+  color: var(--orange);
+}
+
+.peek__close {
+  position: absolute;
+  top: -0.9rem;
+  right: -0.9rem;
+  z-index: 2;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 1px solid rgba(255, 150, 70, 0.6);
+  border-radius: 50%;
+  background: #140c08;
+  color: #ffd9b0;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.peek__close:hover,
+.peek__close:focus-visible {
+  border-color: var(--orange);
+  color: #fff;
+}
+
+/* HERO の最新作ボタン。SNS ボタンより一段大きく、表紙つきで目立たせる */
+.hero__latest {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 3.2rem;
+  padding: 0.9rem 1.4rem 0.9rem 0.9rem;
+  border: 1px solid rgba(255, 150, 70, 0.7);
+  border-radius: 1.1rem;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255, 140, 60, 0.35), transparent 60%),
+    linear-gradient(100deg, rgba(255, 122, 50, 0.22), rgba(20, 10, 6, 0.8) 72%);
+  color: #fff1de;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(255, 122, 50, 0.22);
+  animation: plate-in 1.1s ease 2.6s both;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.hero__latest:hover,
+.hero__latest:focus-visible {
+  border-color: var(--orange);
+  box-shadow: 0 0 44px rgba(255, 122, 50, 0.45);
+  transform: translateY(-2px);
+}
+
+.hero__latest-cover {
+  width: 3.6rem;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 0.35rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.hero__latest-txt {
+  display: grid;
+  justify-items: start;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.hero__latest small {
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffc14a, #ff7a32);
+  color: #1a0d05;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.hero__latest strong {
+  font-family: var(--jp);
+  font-size: 1.45rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+}
+
+.hero__latest em {
+  color: #ffd9b0;
+  font-size: 0.9rem;
+  font-style: normal;
+  letter-spacing: 0.1em;
+}
+
+.hero__latest > i {
+  font-size: 1.4rem;
+  font-style: normal;
+  color: var(--orange);
+  transition: transform 0.25s ease;
+}
+
+.hero__latest:hover > i {
+  transform: translateX(5px);
+}
+
+.hero__latest + .hero__pills {
+  margin-top: 0.9rem;
+}
+
+/* ときどきセクションの後ろを横切るあぶく。タップの判定は main.js で座標から行う */
+.swim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.swim.is-on {
+  opacity: 1;
+}
+
+.swim__bob {
+  position: absolute;
+  top: 72%;
+  left: 0;
+  width: clamp(120px, 12vw, 190px);
+  animation:
+    swim-x 36s linear infinite,
+    swim-bob 3.4s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.swim.is-on .swim__bob {
+  animation-play-state: running;
+}
+
+.swim__bob img {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.38;
+  filter: blur(0.5px) drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+  transition: opacity 0.4s ease;
+}
+
+.swim__bob.is-happy img {
+  opacity: 0.9;
+  animation: abuku-happy 0.9s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.swim__bob i {
+  position: absolute;
+  top: 44%;
+  left: 17%;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.08) 60%);
+  opacity: 0;
+  animation: swim-bubble 3s ease-in infinite;
+}
+
+.swim__bob i:nth-of-type(2) {
+  width: 6px;
+  height: 6px;
+  animation-delay: 1s;
+}
+
+.swim__bob i:nth-of-type(3) {
+  width: 11px;
+  height: 11px;
+  animation-delay: 2s;
+}
+
 .go-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+.go--feature {
+  grid-column: 1 / -1;
+  border-color: rgba(255, 170, 90, 0.55);
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255, 160, 70, 0.2), transparent 55%),
+    rgba(7, 8, 13, 0.62);
+}
+
+.go--feature img {
+  width: 64px;
+  height: 64px;
+  background: #fff;
+}
+
+.go--feature strong {
+  font-family: var(--jp);
+  font-size: 1.45rem;
+  letter-spacing: 0.06em;
+}
+
+.go__note {
+  margin-left: auto;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(255, 170, 90, 0.55);
+  border-radius: 999px;
+  color: #ffc98a;
+  font-size: 0.82rem;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.go__note + .go__arr {
+  margin-left: 0.4rem;
 }
 
 .go {
@@ -1548,6 +2104,175 @@ a.novel:hover {
   }
 }
 
+@keyframes new-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 122, 50, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px rgba(255, 122, 50, 0);
+  }
+}
+
+@keyframes peek-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 紙がたわみながら開き、少し行き過ぎてふわりと落ち着く */
+@keyframes peek-turn {
+  0% {
+    transform: rotateY(-118deg) skewY(-7deg) scaleX(0.92);
+  }
+  40% {
+    transform: rotateY(-38deg) skewY(-3deg) scaleX(0.97);
+  }
+  72% {
+    transform: rotateY(5deg) skewY(0.8deg);
+  }
+  88% {
+    transform: rotateY(-1.5deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes peek-shade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes peek-line {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes abuku-happy {
+  0% {
+    transform: none;
+  }
+  30% {
+    transform: translateY(-22px) rotate(-14deg) scale(1.12);
+  }
+  55% {
+    transform: translateY(0) rotate(8deg) scale(0.96);
+  }
+  75% {
+    transform: translateY(-6px) rotate(-4deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes emote-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -110%) scale(1.15);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -150%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -190%) scale(0.9);
+  }
+}
+
+@keyframes emote-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  20% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1);
+  }
+}
+
+@keyframes peek-turn-down {
+  0% {
+    transform: rotateX(110deg) skewX(6deg) scaleY(0.92);
+  }
+  40% {
+    transform: rotateX(34deg) skewX(2deg) scaleY(0.97);
+  }
+  72% {
+    transform: rotateX(-5deg);
+  }
+  88% {
+    transform: rotateX(1.5deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* 右から入って左へ抜け、後半は画面外で休む */
+@keyframes swim-x {
+  0% {
+    translate: calc(100vw + 20px) 0;
+  }
+  28% {
+    translate: 58vw -9vh;
+  }
+  55% {
+    translate: -220px 5vh;
+  }
+  100% {
+    translate: -220px 5vh;
+  }
+}
+
+@keyframes swim-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
+  }
+}
+
+@keyframes swim-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-14px, -80px) scale(1.1);
+  }
+}
+
 @keyframes book-out {
   to {
     opacity: 0;
@@ -1651,16 +2376,90 @@ a.novel:hover {
   .nameplate .hero__kicker,
   .nameplate .hero__en,
   .nameplate__rule,
-  .hero__pills {
+  .hero__pills,
+  .hero__latest,
+  .novel__new,
+  .peek[open] .peek__book,
+  .peek[open] .peek__page--r,
+  .peek[open] .peek__page--r::before,
+  .peek[open] .peek__text p,
+  .peek[open] .peek__chapter {
     animation: none;
   }
 
-  .book {
+  .book,
+  .swim {
     display: none;
   }
 }
 
 @media (max-width: 860px) {
+  .peek {
+    width: 92vw;
+  }
+
+  .peek__book {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .peek__page--l {
+    display: grid;
+    grid-template-columns: 4.2rem 1fr;
+    align-content: center;
+    column-gap: 1rem;
+    row-gap: 0.2rem;
+    padding: 1.3rem 1.3rem 1.1rem;
+    border-radius: 0.6rem 0.6rem 0 0;
+    text-align: left;
+  }
+
+  .peek__page--l::after {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.45), transparent 18%);
+  }
+
+  .peek__cover {
+    grid-row: 1 / span 3;
+    width: 4.2rem;
+    margin: 0;
+  }
+
+  .peek__page--r {
+    padding: 1.3rem 1.3rem 1.2rem;
+    border-radius: 0 0 0.6rem 0.6rem;
+    transform-origin: center top;
+  }
+
+  .peek__page--r::after {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent 12%);
+  }
+
+  .peek[open] .peek__page--r {
+    animation-name: peek-turn-down;
+  }
+
+  .peek__text {
+    height: min(22rem, 52vh);
+    font-size: 1.1rem;
+  }
+
+  .hero__latest {
+    gap: 0.8rem;
+    margin-top: 2.4rem;
+    padding: 0.75rem 1rem 0.75rem 0.75rem;
+  }
+
+  .hero__latest-cover {
+    width: 3rem;
+  }
+
+  .hero__latest strong {
+    font-size: 1.2rem;
+  }
+
+  .hero__latest em {
+    font-size: 0.8rem;
+  }
+
   .burger {
     top: 0.65rem;
     right: 0.65rem;
@@ -1672,6 +2471,14 @@ a.novel:hover {
   .go-grid,
   .novel-grid {
     grid-template-columns: 1fr;
+  }
+
+  .go__note {
+    display: none;
+  }
+
+  .go__note + .go__arr {
+    margin-left: auto;
   }
 
   .hash-grid {
@@ -1757,7 +2564,32 @@ a.novel:hover {
   }
 
   .pill span:not(.pill__mark) {
+    overflow: visible;
+    white-space: normal;
     font-size: 0.68rem;
+  }
+
+  .hero__pills {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pill--feature {
+    grid-column: 1 / -1;
+    gap: 0.6rem;
+    padding: 0.5rem 0.9rem 0.5rem 0.5rem;
+  }
+
+  .pill--feature img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .pill--feature span:not(.pill__mark) {
+    font-size: 0.92rem;
+  }
+
+  .pill--feature small {
+    font-size: 0.64rem;
   }
 
   .hero-slide {

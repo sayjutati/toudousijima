@@ -56,9 +56,10 @@ function socialPills() {
   return site.social
     .map(
       (item) => `
-        <a class="pill" href="${item.href}" target="_blank" rel="noopener noreferrer">
+        <a class="pill${item.feature ? ' pill--feature' : ''}" href="${item.href}" target="_blank" rel="noopener noreferrer">
           <img src="${item.icon}" alt="" width="28" height="28" />
-          <span>${item.label}</span>
+          <span>${item.label}${item.note ? `<small>${item.note}</small>` : ''}</span>
+          ${item.feature ? '<i aria-hidden="true">↗</i>' : ''}
         </a>
       `,
     )
@@ -95,6 +96,8 @@ function profileCards() {
     .join('')
 }
 
+const latestNovel = site.novels.items.filter((novel) => novel.href).at(-1)
+
 function novelCards() {
   return site.novels.items
     .map((novel, index) => {
@@ -111,16 +114,20 @@ function novelCards() {
         `
       }
       return `
-        <a class="novel panel" href="${novel.href}" target="_blank" rel="noopener noreferrer" data-reveal ${delay}>
+        <article class="novel panel" data-reveal ${delay}>
+          ${novel === latestNovel ? '<span class="novel__new">NEW</span>' : ''}
           ${novel.cover ? `<img class="novel__cover" src="${novel.cover}" alt="${novel.title} の表紙" loading="lazy" />` : ''}
           <div class="novel__body">
             <p class="novel__plat">${novel.platform}</p>
-            <p class="novel__title">${novel.title}</p>
+            <a class="novel__title" href="${novel.href}" target="_blank" rel="noopener noreferrer">${novel.title}</a>
             ${novel.author ? `<p class="novel__by">${novel.author}</p>` : ''}
             ${novel.summary ? `<p class="novel__sum">${novel.summary}</p>` : ''}
-            <span class="novel__go">読む<i aria-hidden="true">↗</i></span>
+            <div class="novel__acts">
+              ${novel.excerpt ? `<button class="novel__peek" type="button" data-peek="${index}">試し読み</button>` : ''}
+              <span class="novel__go">読む<i aria-hidden="true">↗</i></span>
+            </div>
           </div>
-        </a>
+        </article>
       `
     })
     .join('')
@@ -158,12 +165,13 @@ function linkCards() {
   return site.social
     .map(
       (item) => `
-        <a class="go panel" href="${item.href}" target="_blank" rel="noopener noreferrer" data-reveal>
+        <a class="go panel${item.feature ? ' go--feature' : ''}" href="${item.href}" target="_blank" rel="noopener noreferrer" data-reveal>
           <img src="${item.icon}" alt="" width="52" height="52" />
           <span>
             <strong>${item.label}</strong>
             <small>${item.handle}</small>
           </span>
+          ${item.note ? `<em class="go__note">${item.note}</em>` : ''}
           <i class="go__arr" aria-hidden="true">↗</i>
         </a>
       `,
@@ -175,6 +183,12 @@ document.querySelector('#app').innerHTML = `
   <div class="bg" aria-hidden="true">
     <img class="bg__img bg__img--top" src="${site.backgrounds.top}" alt="" />
     <img class="bg__img bg__img--bottom" src="${site.backgrounds.bottom}" alt="" />
+  </div>
+  <div class="swim" aria-hidden="true">
+    <div class="swim__bob">
+      <img src="/images/abuku-fish.png" alt="" width="1024" height="683" />
+      <i></i><i></i><i></i>
+    </div>
   </div>
   <div class="page">
     <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="メニューを開く">
@@ -222,6 +236,19 @@ document.querySelector('#app').innerHTML = `
             <p class="hero__en">${site.nameEn}</p>
             <span class="nameplate__rule nameplate__rule--flip" aria-hidden="true"><i></i><b></b><i></i></span>
           </div>
+          ${
+            latestNovel?.excerpt
+              ? `<button class="hero__latest" type="button" data-peek="${site.novels.items.indexOf(latestNovel)}">
+                  <img class="hero__latest-cover" src="${latestNovel.cover}" alt="" />
+                  <span class="hero__latest-txt">
+                    <small>最新作</small>
+                    <strong>『${latestNovel.title}』</strong>
+                    <em>冒頭を試し読みする</em>
+                  </span>
+                  <i aria-hidden="true">→</i>
+                </button>`
+              : ''
+          }
           <div class="hero__pills">${socialPills()}</div>
         </div>
         <div class="hero__slides">${heroSlides()}</div>
@@ -334,6 +361,23 @@ document.querySelector('#app').innerHTML = `
       </p>
     </footer>
   </div>
+
+  <dialog class="peek" aria-labelledby="peek-title">
+    <div class="peek__book">
+      <div class="peek__page peek__page--l">
+        <img class="peek__cover" alt="" />
+        <p class="peek__plat">試し読み</p>
+        <h3 id="peek-title" class="peek__title"></h3>
+        <p class="peek__by"></p>
+      </div>
+      <div class="peek__page peek__page--r">
+        <p class="peek__chapter"></p>
+        <div class="peek__text"></div>
+        <a class="peek__more" target="_blank" rel="noopener noreferrer">Nolaで続きを読む<i aria-hidden="true">↗</i></a>
+      </div>
+    </div>
+    <button class="peek__close" type="button" aria-label="閉じる">×</button>
+  </dialog>
 `
 
 const burger = document.querySelector('.burger')
@@ -358,8 +402,19 @@ function setDrawer(open) {
   document.body.classList.toggle('nav-open', open)
 }
 
+const peek = document.querySelector('.peek')
+
+function eventInPeekText(event) {
+  const text = peek?.querySelector('.peek__text')
+  return Boolean(peek?.open && text && event.target instanceof Node && text.contains(event.target))
+}
+
+function scrollLocked() {
+  return document.body.classList.contains('nav-open') || document.body.classList.contains('peek-open')
+}
+
 function blockBackgroundScroll(event) {
-  if (!document.body.classList.contains('nav-open') || eventInSheet(event)) return
+  if (!scrollLocked() || eventInSheet(event) || eventInPeekText(event)) return
   event.preventDefault()
 }
 
@@ -371,20 +426,101 @@ drawer?.querySelectorAll('a').forEach((link) => {
   link.addEventListener('click', () => setDrawer(false))
 })
 document.addEventListener('keydown', (event) => {
-  if (!document.body.classList.contains('nav-open')) return
-  if (event.key === 'Escape') {
+  if (!scrollLocked()) return
+  if (event.key === 'Escape' && document.body.classList.contains('nav-open')) {
     setDrawer(false)
     return
   }
-  if (!scrollKeys.has(event.key) || eventInSheet(event)) return
+  if (!scrollKeys.has(event.key) || eventInSheet(event) || eventInPeekText(event)) return
   event.preventDefault()
 })
 window.addEventListener('wheel', blockBackgroundScroll, { passive: false })
 window.addEventListener('touchmove', blockBackgroundScroll, { passive: false })
 window.addEventListener('scroll', () => {
-  if (!document.body.classList.contains('nav-open') || window.scrollY === lockedScrollY) return
+  if (!scrollLocked() || window.scrollY === lockedScrollY) return
   window.scrollTo(0, lockedScrollY)
 })
+
+function openPeek(index) {
+  const novel = site.novels.items[index]
+  if (!peek || !novel?.excerpt) return
+  const cover = peek.querySelector('.peek__cover')
+  cover.src = novel.cover
+  cover.alt = `${novel.title} の表紙`
+  peek.querySelector('.peek__title').textContent = novel.title
+  peek.querySelector('.peek__by').textContent = novel.author
+  peek.querySelector('.peek__chapter').textContent = novel.excerpt.chapter
+  peek.querySelector('.peek__text').innerHTML = novel.excerpt.lines.map((line) => `<p>${line}</p>`).join('')
+  peek.querySelector('.peek__more').href = novel.href
+  lockedScrollY = window.scrollY
+  document.body.classList.add('peek-open')
+  peek.showModal()
+  peek.querySelector('.peek__text').scrollTo(0, 0)
+}
+
+document.querySelectorAll('[data-peek]').forEach((button) => {
+  button.addEventListener('click', () => openPeek(Number(button.dataset.peek)))
+})
+peek?.querySelector('.peek__close')?.addEventListener('click', () => peek.close())
+peek?.addEventListener('click', (event) => {
+  if (event.target === peek) peek.close()
+})
+peek?.addEventListener('close', () => document.body.classList.remove('peek-open'))
+
+{
+  const swimBob = document.querySelector('.swim__bob')
+  const profileFish = document.querySelector('.who__photo[src*="abuku"]')
+  profileFish?.classList.add('who__photo--tap')
+
+  const spawn = (className, x, y, text = '', vars = {}) => {
+    const el = document.createElement('span')
+    el.className = className
+    el.textContent = text
+    el.style.left = `${x}px`
+    el.style.top = `${y}px`
+    Object.entries(vars).forEach(([key, value]) => el.style.setProperty(key, value))
+    document.body.append(el)
+    el.addEventListener('animationend', () => el.remove(), { once: true })
+  }
+
+  const cheer = (target, x, y) => {
+    spawn('emote', x, y, Math.random() < 0.7 ? '♥' : '♪')
+    for (let i = 0; i < 6; i += 1) {
+      const angle = (Math.PI * 2 * i) / 6 + Math.random() * 0.6
+      const dist = 40 + Math.random() * 40
+      spawn('emote emote--bubble', x, y, '', {
+        '--s': `${6 + Math.random() * 10}px`,
+        '--dx': `${Math.cos(angle) * dist}px`,
+        '--dy': `${Math.sin(angle) * dist - 30}px`,
+      })
+    }
+    target.classList.remove('is-happy')
+    void target.offsetWidth
+    target.classList.add('is-happy')
+  }
+
+  swimBob?.addEventListener('animationend', (event) => {
+    if (event.animationName === 'abuku-happy') swimBob.classList.remove('is-happy')
+  })
+  profileFish?.addEventListener('animationend', () => profileFish.classList.remove('is-happy'))
+  profileFish?.addEventListener('click', (event) => cheer(profileFish, event.clientX, event.clientY))
+
+  // 泳ぐあぶくはセクションの後ろにいてクリックを受けられないので、座標で当たり判定する
+  document.addEventListener('pointerdown', (event) => {
+    if (!swimBob || !swimBob.parentElement.classList.contains('is-on')) return
+    if (event.target instanceof Element && event.target.closest('a, button, dialog, input, .panel')) return
+    const rect = swimBob.querySelector('img').getBoundingClientRect()
+    const pad = 12
+    if (
+      event.clientX < rect.left - pad ||
+      event.clientX > rect.right + pad ||
+      event.clientY < rect.top - pad ||
+      event.clientY > rect.bottom + pad
+    )
+      return
+    cheer(swimBob, event.clientX, event.clientY)
+  })
+}
 
 const navEls = document.querySelectorAll('[data-nav]')
 const sections = navItems.map((item) => document.getElementById(item.id)).filter(Boolean)
@@ -409,6 +545,7 @@ if (sections.length && navEls.length) {
 {
   const root = document.documentElement
   const heroes = document.querySelectorAll('.hero')
+  const swim = document.querySelector('.swim')
   const clamp01 = (v) => Math.min(1, Math.max(0, v))
   const smooth = (t) => t * t * (3 - 2 * t)
   let queued = false
@@ -428,6 +565,7 @@ if (sections.length && navEls.length) {
     const mix = smooth(clamp01((y - (mid - vh / 2)) / vh))
     root.style.setProperty('--bg-blur', `${(1 - focus) * 26}px`)
     root.style.setProperty('--bg-mix', mix.toFixed(3))
+    swim?.classList.toggle('is-on', focus > 0.5)
   }
 
   const request = () => {
