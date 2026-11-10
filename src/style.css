@@ -230,9 +230,11 @@ main {
 
 .drawer__social {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 2.5rem);
+  justify-content: start;
+  gap: 0.45rem;
   margin-top: auto;
   padding-top: 1.4rem;
 }
@@ -240,8 +242,8 @@ main {
 .drawer__social a {
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 100%;
+  aspect-ratio: 1;
   border: 1px solid rgba(255, 122, 50, 0.35);
   border-radius: 50%;
   background: rgba(10, 11, 16, 0.55);
