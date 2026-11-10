@@ -7,6 +7,7 @@ inject()
 const navItems = [
   { id: 'start', label: 'TOP', jp: 'トップ' },
   { id: 'about', label: 'ABOUT', jp: '自己紹介' },
+  { id: 'nola', label: 'NOLA', jp: '執筆作品' },
   { id: 'profile', label: 'PROFILE', jp: 'プロフィール' },
   { id: 'tags', label: 'TAGS', jp: '公式タグ' },
   { id: 'link', label: 'LINK', jp: 'リンク' },
@@ -249,8 +250,9 @@ document.querySelector('#app').innerHTML = `
                   <span class="hero__latest-txt">
                     <small>最新作</small>
                     <strong>『${latestNovel.title}』</strong>
-                    <em>冒頭を試し読みする</em>
-                  </span>
+            <em>冒頭を試し読みする</em>
+          </span>
+          ${latestNovel.summary ? `<span class="hero__latest-sum">${latestNovel.summary}</span>` : ''}
                   <i aria-hidden="true">→</i>
                 </button>`
               : ''
@@ -288,7 +290,7 @@ document.querySelector('#app').innerHTML = `
         </div>
       </section>
 
-      <section class="band" aria-labelledby="novels-title">
+      <section id="nola" class="band" aria-labelledby="novels-title">
         <p class="band__ghost" aria-hidden="true">NOLA</p>
         <div class="band__in">
           <div class="block__head" data-reveal>
@@ -372,10 +374,11 @@ document.querySelector('#app').innerHTML = `
     <div class="peek__book">
       ${bookMarkup('peek__flip')}
       <div class="peek__page peek__page--l">
-        <img class="peek__cover" alt="" />
+        <a class="peek__cover-link" data-nola target="_blank" rel="noopener noreferrer"><img class="peek__cover" alt="" /></a>
         <p class="peek__plat">試し読み</p>
-        <h3 id="peek-title" class="peek__title"></h3>
+        <h3 class="peek__title"><a id="peek-title" data-nola target="_blank" rel="noopener noreferrer"></a></h3>
         <p class="peek__by"></p>
+        <a class="peek__nola" data-nola target="_blank" rel="noopener noreferrer"><img src="/icons/nola.png" alt="" width="22" height="22" />Nolaで作品ページへ<i aria-hidden="true">↗</i></a>
       </div>
       <div class="peek__page peek__page--r">
         <p class="peek__chapter"></p>
@@ -454,11 +457,13 @@ function openPeek(index) {
   const cover = peek.querySelector('.peek__cover')
   cover.src = novel.cover
   cover.alt = `${novel.title} の表紙`
-  peek.querySelector('.peek__title').textContent = novel.title
+  peek.querySelector('#peek-title').textContent = novel.title
   peek.querySelector('.peek__by').textContent = novel.author
   peek.querySelector('.peek__chapter').textContent = novel.excerpt.chapter
   peek.querySelector('.peek__text').innerHTML = novel.excerpt.lines.map((line) => `<p>${line}</p>`).join('')
-  peek.querySelector('.peek__more').href = novel.href
+  peek.querySelectorAll('.peek__more, [data-nola]').forEach((link) => {
+    link.href = novel.href
+  })
   lockedScrollY = window.scrollY
   document.body.classList.add('peek-open')
   peek.showModal()
